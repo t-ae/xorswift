@@ -4,10 +4,10 @@
 #include <CoreFoundation/CoreFoundation.h>
 #include "xorswift.h"
 
-uint32_t x = arc4random();
-uint32_t y = arc4random();
-uint32_t z = arc4random();
-uint32_t w = arc4random();
+static uint32_t x = arc4random();
+static uint32_t y = arc4random();
+static uint32_t z = arc4random();
+static uint32_t w = arc4random();
 
 void xorshift(unsigned int *start, int count) {
     uint32_t t;
