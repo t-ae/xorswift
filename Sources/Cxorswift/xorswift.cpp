@@ -25,7 +25,7 @@ void xorshift(unsigned int *start, int count) {
 void xorshift_uniform(float *start, int count, float low, float high) {
     uint32_t t;
     float *p = start; // in [0, 1)
-    float divisor = (float)((uint64_t)UINT32_MAX + 1);
+    float divisor = (float)UINT32_MAX + 1;
     
     for(int i = 0 ; i < count ; ++i) {
         t = x ^ (x << 11);
@@ -40,19 +40,18 @@ void _xorshift_normal(float *start, int count, float mu, float sigma) {
     uint32_t t;
     float *p = start; // ~ N(mu, sigma)
     float x1, x2; // in (0, 1)
-    float divisor = (float)((uint64_t)UINT32_MAX + 1);
+    float divisor = (float)UINT32_MAX + 1;
     
     for(int i = 0 ; i < count ; ++i) {
         t = x ^ (x << 11);
         x = y; y = z; z = w;
         w = (w ^ (w >> 19)) ^ (t ^ (t >> 8));
-        x1 = (w + FLT_MIN) / divisor;
+        x1 = (float)w / divisor + FLT_MIN;
         
         t = x ^ (x << 11);
         x = y; y = z; z = w;
         w = (w ^ (w >> 19)) ^ (t ^ (t >> 8));
-        x2 = (w + FLT_MIN) / divisor;
-        
+        x2 = (float)w / divisor + FLT_MIN;
         
         *p = sqrtf(-2*logf(x1)) * cosf(2*M_PI*x2);
         ++p;
