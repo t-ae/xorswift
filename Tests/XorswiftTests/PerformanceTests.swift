@@ -5,6 +5,7 @@ import XCTest
 #endif
 import Xorswift
 
+#if !SWIFT_PACKAGE
 class PerformanceTests: XCTestCase {
     
     func testPerformance_arc4random() {
@@ -75,5 +76,5 @@ class PerformanceTests: XCTestCase {
             }
         }
     }
-    
 }
+#endif
