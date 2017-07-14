@@ -1,5 +1,5 @@
 # Xorswift
-Xorshift Random number generator library.  
+Xorshift pseudorandom number generator library.  
 Specialized to generate many random numbers.  
 
 ## Faster than `arc4random_buf`
