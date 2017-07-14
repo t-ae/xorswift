@@ -7,7 +7,11 @@ public func xorshift(start: UnsafeMutablePointer<UInt32>, count: Int) {
 }
 
 /// Sample random Float numbers from [low, high).
-public func xorshift_uniform(start: UnsafeMutablePointer<Float>, count: Int, low: Float, high: Float) {
+public func xorshift_uniform(start: UnsafeMutablePointer<Float>,
+                             count: Int,
+                             low: Float = 0,
+                             high: Float = 1) {
+    
     xorshift_uniform(start, Int32(count), low, high)
 }
 
@@ -15,7 +19,10 @@ public func xorshift_uniform(start: UnsafeMutablePointer<Float>, count: Int, low
     import Accelerate
     
     /// Sample random numbers from normal distribution N(mu, sigma).
-    public func xorshift_normal(start: UnsafeMutablePointer<Float>, count: Int, mu: Float, sigma: Float) {
+    public func xorshift_normal(start: UnsafeMutablePointer<Float>,
+                                count: Int,
+                                mu: Float = 0,
+                                sigma: Float = 1) {
         
         var _count = Int32(count)
         let __count = vDSP_Length(count)
@@ -58,7 +65,11 @@ public func xorshift_uniform(start: UnsafeMutablePointer<Float>, count: Int, low
     }
 #else
     /// Generate random numbers from normal distribution N(mu, sigma).
-    public func xorshift_normal(start: UnsafeMutablePointer<Float>, count: Int, mu: Float, sigma: Float) {
+    public func xorshift_normal(start: UnsafeMutablePointer<Float>,
+                                count: Int,
+                                mu: Float = 0,
+                                sigma: Float = 1) {
+        
         _xorshift_normal(start, Int32(count), mu, sigma)
     }
 #endif
@@ -66,6 +77,9 @@ public func xorshift_uniform(start: UnsafeMutablePointer<Float>, count: Int, low
 /// Generate random numbers from normal distribution N(mu, sigma).
 ///
 /// - Note: It's slower than `xorshift_normal` in apple devices, but use less memories.
-public func _xorshift_normal(start: UnsafeMutablePointer<Float>, count: Int, mu: Float, sigma: Float) {
+public func _xorshift_normal(start: UnsafeMutablePointer<Float>,
+                             count: Int,
+                             mu: Float = 0,
+                             sigma: Float = 1) {
     _xorshift_normal(start, Int32(count), mu, sigma)
 }
