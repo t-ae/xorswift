@@ -1,9 +1,24 @@
 
 import Cxorswift
 
+/// Generate single random UInt32 number.
+public func xorshift() -> UInt32 {
+    var ret: UInt32 = 0
+    xorshift(&ret, 1)
+    return ret
+}
+
 /// Generate random UInt32 numbers.
 public func xorshift(start: UnsafeMutablePointer<UInt32>, count: Int) {
     xorshift(start, Int32(count))
+}
+
+/// Sample random Float number from [low, high).
+public func xorshift_uniform(low: Float = 0,
+                             high: Float = 1) -> Float {
+    var ret: Float = 0
+    xorshift_uniform(&ret, 1, low, high)
+    return ret
 }
 
 /// Sample random Float numbers from [low, high).
@@ -73,6 +88,13 @@ public func xorshift_uniform(start: UnsafeMutablePointer<Float>,
         _xorshift_normal(start, Int32(count), mu, sigma)
     }
 #endif
+
+/// Generate random number from normal distribution N(mu, sigma).
+public func xorshift_normal(mu: Float = 0, sigma: Float = 1) -> Float {
+    var ret: Float = 0
+    _xorshift_normal(&ret, 1, mu, sigma)
+    return ret
+}
 
 /// Generate random numbers from normal distribution N(mu, sigma).
 ///
