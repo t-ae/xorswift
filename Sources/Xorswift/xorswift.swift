@@ -1,11 +1,12 @@
 
 import Cxorswift
 
-
+/// Generate random UInt32 numbers.
 public func xorshift(start: UnsafeMutablePointer<UInt32>, count: Int) {
     xorshift(start, Int32(count))
 }
 
+/// Sample random Float numbers from [low, high).
 public func xorshift_uniform(start: UnsafeMutablePointer<Float>, count: Int, low: Float, high: Float) {
     xorshift_uniform(start, Int32(count), low, high)
 }
@@ -13,6 +14,7 @@ public func xorshift_uniform(start: UnsafeMutablePointer<Float>, count: Int, low
 #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
     import Accelerate
     
+    /// Sample random numbers from normal distribution N(mu, sigma).
     public func xorshift_normal(start: UnsafeMutablePointer<Float>, count: Int, mu: Float, sigma: Float) {
         
         var _count = Int32(count)
@@ -55,11 +57,15 @@ public func xorshift_uniform(start: UnsafeMutablePointer<Float>, count: Int, low
         }
     }
 #else
+    /// Generate random numbers from normal distribution N(mu, sigma).
     public func xorshift_normal(start: UnsafeMutablePointer<Float>, count: Int, mu: Float, sigma: Float) {
         _xorshift_normal(start, Int32(count), mu, sigma)
     }
 #endif
 
+/// Generate random numbers from normal distribution N(mu, sigma).
+///
+/// - Note: It's slower than `xorshift_normal` in apple devices, but use less memories.
 public func _xorshift_normal(start: UnsafeMutablePointer<Float>, count: Int, mu: Float, sigma: Float) {
     _xorshift_normal(start, Int32(count), mu, sigma)
 }
