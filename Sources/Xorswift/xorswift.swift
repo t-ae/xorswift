@@ -13,7 +13,7 @@ public func xorshift(start: UnsafeMutablePointer<UInt32>, count: Int) {
     xorshift(start, Int32(count))
 }
 
-/// Sample random Float number from [low, high).
+/// Sample random Float number from unifrom distribution [low, high).
 public func xorshift_uniform(low: Float = 0,
                              high: Float = 1) -> Float {
     var ret: Float = 0
@@ -21,7 +21,7 @@ public func xorshift_uniform(low: Float = 0,
     return ret
 }
 
-/// Sample random Float numbers from [low, high).
+/// Sample random Float numbers from unifrom distribution [low, high).
 public func xorshift_uniform(start: UnsafeMutablePointer<Float>,
                              count: Int,
                              low: Float = 0,
