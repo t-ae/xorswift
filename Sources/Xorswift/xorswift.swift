@@ -89,14 +89,14 @@ public func xorshift_uniform(start: UnsafeMutablePointer<Float>,
     }
 #endif
 
-/// Generate random number from normal distribution N(mu, sigma).
+/// Sample random number from normal distribution N(mu, sigma).
 public func xorshift_normal(mu: Float = 0, sigma: Float = 1) -> Float {
     var ret: Float = 0
     _xorshift_normal(&ret, 1, mu, sigma)
     return ret
 }
 
-/// Generate random numbers from normal distribution N(mu, sigma).
+/// Sample random numbers from normal distribution N(mu, sigma).
 ///
 /// - Note: It's slower than `xorshift_normal` in apple devices, but use less memories.
 public func _xorshift_normal(start: UnsafeMutablePointer<Float>,
