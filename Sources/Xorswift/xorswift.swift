@@ -9,23 +9,36 @@ public func xorshift() -> UInt32 {
 }
 
 /// Generate random UInt32 numbers.
+/// - Precondition: 
+///   - `count` >= 0
 public func xorshift(start: UnsafeMutablePointer<UInt32>, count: Int) {
+    precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
+
     xorshift(start, Int32(count))
 }
 
 /// Sample random Float number from unifrom distribution [low, high).
+/// - Precondition:
+///   - `low` < `high`
 public func xorshift_uniform(low: Float = 0,
                              high: Float = 1) -> Float {
+    precondition(low < high, "Invalid argument: must be `low` < `high`")
+    
     var ret: Float = 0
     xorshift_uniform(&ret, 1, low, high)
     return ret
 }
 
 /// Sample random Float numbers from unifrom distribution [low, high).
+/// - Precondition: 
+///   - `count` >= 0
+///   - `low` < `high`
 public func xorshift_uniform(start: UnsafeMutablePointer<Float>,
                              count: Int,
                              low: Float = 0,
                              high: Float = 1) {
+    precondition(low < high, "Invalid argument: must be `low` < `high`")
+    precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
     
     xorshift_uniform(start, Int32(count), low, high)
 }
@@ -34,10 +47,16 @@ public func xorshift_uniform(start: UnsafeMutablePointer<Float>,
     import Accelerate
     
     /// Sample random numbers from normal distribution N(mu, sigma).
+    /// - Precondition:
+    ///   - `count` >= 0
+    ///   - `sigma` >= 0
     public func xorshift_normal(start: UnsafeMutablePointer<Float>,
                                 count: Int,
                                 mu: Float = 0,
                                 sigma: Float = 1) {
+        
+        precondition(sigma >= 0, "Invalid argument: `sigma` must not be less than 0.")
+        precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
         
         var _count = Int32(count)
         let __count = vDSP_Length(count)
@@ -80,17 +99,26 @@ public func xorshift_uniform(start: UnsafeMutablePointer<Float>,
     }
 #else
     /// Generate random numbers from normal distribution N(mu, sigma).
+    /// - Precondition:
+    ///   - `count` >= 0
+    ///   - `sigma` >= 0
     public func xorshift_normal(start: UnsafeMutablePointer<Float>,
                                 count: Int,
                                 mu: Float = 0,
                                 sigma: Float = 1) {
+        precondition(sigma >= 0, "Invalid argument: `sigma` must not be less than 0.")
+        precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
         
         _xorshift_normal(start, Int32(count), mu, sigma)
     }
 #endif
 
 /// Sample random number from normal distribution N(mu, sigma).
+/// - Precondition:
+///   - `sigma` >= 0
 public func xorshift_normal(mu: Float = 0, sigma: Float = 1) -> Float {
+    precondition(sigma >= 0, "Invalid argument: `sigma` must not be less than 0.")
+    
     var ret: Float = 0
     _xorshift_normal(&ret, 1, mu, sigma)
     return ret
@@ -99,9 +127,15 @@ public func xorshift_normal(mu: Float = 0, sigma: Float = 1) -> Float {
 /// Sample random numbers from normal distribution N(mu, sigma).
 ///
 /// - Note: It's slower than `xorshift_normal` in apple devices, but use less memories.
+/// - Precondition:
+///   - `count` >= 0
+///   - `sigma` >= 0
 public func _xorshift_normal(start: UnsafeMutablePointer<Float>,
                              count: Int,
                              mu: Float = 0,
                              sigma: Float = 1) {
+    precondition(sigma >= 0, "Invalid argument: `sigma` must not be less than 0.")
+    precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
+    
     _xorshift_normal(start, Int32(count), mu, sigma)
 }
