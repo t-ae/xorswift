@@ -53,7 +53,7 @@ void _xorshift_normal(float *start, int count, float mu, float sigma) {
         w = (w ^ (w >> 19)) ^ (t ^ (t >> 8));
         x2 = (float)w / divisor + FLT_MIN;
         
-        *p = sqrtf(-2*logf(x1)) * cosf(2*M_PI*x2);
+        *p = sigma * sqrtf(-2*logf(x1)) * cosf(2*M_PI*x2) + mu;
         ++p;
     }
 }

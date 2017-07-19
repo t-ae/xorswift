@@ -76,7 +76,7 @@ class XorswiftTests: XCTestCase {
             let variance = a.map { $0*$0 }.reduce(0, +) / Float(a.count) - mean*mean
             
             XCTAssertEqualWithAccuracy(mean, -1, accuracy: 1e-2)
-            XCTAssertEqualWithAccuracy(variance, 0.5, accuracy: 1e-2)
+            XCTAssertEqualWithAccuracy(variance, 0.5*0.5, accuracy: 1e-2)
         }
         do {
             let count = 1_000
