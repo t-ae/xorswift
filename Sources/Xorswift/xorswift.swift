@@ -71,7 +71,7 @@ public func xorshift_uniform(start: UnsafeMutablePointer<Float>,
         xorshift(buf1, _count)
         vDSP_vfltu32(buf1, 1, buf2, 1, __count)
         
-        var flt_min = Float.leastNonzeroMagnitude
+        var flt_min = Float.leastNormalMagnitude
         
         // X in (0, 1)
         var divisorX: Float = nextafter(Float(UInt32.max), Float.infinity)

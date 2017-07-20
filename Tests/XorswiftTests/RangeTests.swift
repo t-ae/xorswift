@@ -12,7 +12,7 @@ class RangeTests: XCTestCase {
 
     func testRanges() {
         let max = UINT32_MAX
-        let min = Float.leastNonzeroMagnitude
+        let min = Float.leastNormalMagnitude
         let nextmax = nextafterf(Float(max), Float(UINT64_MAX))
         
         XCTAssert(0 < 0/nextmax+min)
