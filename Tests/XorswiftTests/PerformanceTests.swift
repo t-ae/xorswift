@@ -8,6 +8,22 @@ import Xorswift
 #if !SWIFT_PACKAGE
 class PerformanceTests: XCTestCase {
     
+    func testPerformance_arc4random_single() {
+        measure {
+            for _ in 0..<10_000_000 {
+                _ = arc4random()
+            }
+        }
+    }
+    
+    func testPerformance_xorshift_single() {
+        measure {
+            for _ in 0..<10_000_000 {
+                _ = xorshift()
+            }
+        }
+    }
+    
     func testPerformance_arc4random() {
         let count = 1_000_000
         var a = [UInt32](repeating: 0, count: count)
