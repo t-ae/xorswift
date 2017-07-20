@@ -71,12 +71,16 @@ public func xorshift_uniform(start: UnsafeMutablePointer<Float>,
         xorshift(buf1, _count)
         vDSP_vfltu32(buf1, 1, buf2, 1, __count)
         
-        // X, Y in (0, 1)
-        var divisor: Float = nextafter(Float(UInt32.max), Float(UInt64.max))
         var flt_min = Float.leastNonzeroMagnitude
-        vDSP_vsdiv(start, 1, &divisor, start, 1, __count)
+        
+        // X in (0, 1)
+        var divisorX: Float = nextafter(Float(UInt32.max), Float.infinity)
+        vDSP_vsdiv(start, 1, &divisorX, start, 1, __count)
         vDSP_vsadd(start, 1, &flt_min, start, 1, __count)
-        vDSP_vsdiv(buf2, 1, &divisor, buf2, 1, __count)
+        
+        // Y in (0, 2)
+        var divisorY = nextafter(Float(UInt32.max)/2, Float.infinity)
+        vDSP_vsdiv(buf2, 1, &divisorY, buf2, 1, __count)
         vDSP_vsadd(buf2, 1, &flt_min, buf2, 1, __count)
         
         // sigma*sqrt(-2*log(X))
@@ -85,10 +89,8 @@ public func xorshift_uniform(start: UnsafeMutablePointer<Float>,
         vDSP_vsmul(start, 1, &minus2sigma2, start, 1, __count)
         vvsqrtf(start, start, &_count)
         
-        // cos(2*pi*Y)
-        var pi2 = 2 * Float.pi
-        vDSP_vsmul(buf2, 1, &pi2, buf2, 1, __count)
-        vvcosf(buf2, buf2, &_count)
+        // cospi(Y)
+        vvcospif(buf2, buf2, &_count)
         
         vDSP_vmul(start, 1, buf2, 1, start, 1, __count)
         
