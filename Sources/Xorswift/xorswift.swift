@@ -43,7 +43,7 @@ public func xorshift_uniform(start: UnsafeMutablePointer<Float>,
     xorshift_uniform(start, Int32(count), low, high)
 }
 
-#if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
+#if os(macOS) || os(iOS)
     import Accelerate
     
     /// Sample random numbers from normal distribution N(mu, sigma).
