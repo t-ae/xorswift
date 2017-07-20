@@ -43,7 +43,8 @@ class XorswiftTests: XCTestCase {
             xorshift_normal(start: &a, count: count, mu: -1, sigma: 0.5)
             
             let mean = a.reduce(0, +) / Float(a.count)
-            let variance = a.map { $0*$0 }.reduce(0, +) / Float(a.count) - mean*mean
+            let mean2: Float = a.map { $0*$0 }.reduce(0, +) / Float(a.count)
+            let variance = mean2 - mean*mean
             
             XCTAssertEqualWithAccuracy(mean, -1, accuracy: 1e-2)
             XCTAssertEqualWithAccuracy(variance, 0.5*0.5, accuracy: 1e-2)
@@ -73,7 +74,8 @@ class XorswiftTests: XCTestCase {
             _xorshift_normal(start: &a, count: count, mu: -1, sigma: 0.5)
             
             let mean = a.reduce(0, +) / Float(a.count)
-            let variance = a.map { $0*$0 }.reduce(0, +) / Float(a.count) - mean*mean
+            let mean2: Float = a.map { $0*$0 }.reduce(0, +) / Float(a.count)
+            let variance = mean2 - mean*mean
             
             XCTAssertEqualWithAccuracy(mean, -1, accuracy: 1e-2)
             XCTAssertEqualWithAccuracy(variance, 0.5*0.5, accuracy: 1e-2)
