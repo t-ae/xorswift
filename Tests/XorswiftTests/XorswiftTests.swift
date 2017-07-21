@@ -13,11 +13,30 @@ class XorswiftTests: XCTestCase {
             
             XCTAssertEqual(a, [])
         }
+        do {
+            let count = 1
+            var a = [UInt32](repeating: 0, count: count)
+            
+            xorshift(start: &a, count: count)
+            
+            XCTAssertEqual(a.count, 1)
+        }
     }
     
     func testXorshift_float() {
         do {
             let count = 1_000_000
+            var a = [Float](repeating: 0, count: count)
+            
+            xorshift_uniform(start: &a, count: count, low: 1, high: 2)
+            let mean = a.reduce(0, +) / Float(a.count)
+            
+            XCTAssertEqualWithAccuracy(mean, 1.5, accuracy: 1e-3)
+            XCTAssert(a.min()! >= 1)
+            XCTAssert(a.max()! < 2)
+        }
+        do {
+            let count = 1_000_002
             var a = [Float](repeating: 0, count: count)
             
             xorshift_uniform(start: &a, count: count, low: 1, high: 2)
@@ -52,7 +71,7 @@ class XorswiftTests: XCTestCase {
             XCTAssertEqualWithAccuracy(variance, 0.5*0.5, accuracy: 1e-2)
         }
         do {
-            let count = 1_000
+            let count = 1_001
             var a = [Float](repeating: -1, count: count)
             
             xorshift_normal(start: &a, count: count, mu: 1, sigma: 0)
@@ -83,7 +102,7 @@ class XorswiftTests: XCTestCase {
             XCTAssertEqualWithAccuracy(variance, 0.5*0.5, accuracy: 1e-2)
         }
         do {
-            let count = 1_000
+            let count = 1_001
             var a = [Float](repeating: -1, count: count)
             
             _xorshift_normal(start: &a, count: count, mu: 1, sigma: 0)
