@@ -73,7 +73,7 @@ class PerformanceTests: XCTestCase {
     
     #if os(macOS)
     func testPerformance_xorshift_normal_accelerate() {
-        let count = 500_000
+        let count = 300_000
         var a = [Float](repeating: 0, count: count)
         measure {
             for _ in 0..<100 {
@@ -84,7 +84,7 @@ class PerformanceTests: XCTestCase {
     #endif
     
     func testPerformance_xorshift_normal() {
-        let count = 500_000
+        let count = 300_000
         var a = [Float](repeating: 0, count: count)
         measure {
             for _ in 0..<100 {
