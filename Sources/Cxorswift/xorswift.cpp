@@ -10,15 +10,31 @@ static uint32_t z = arc4random();
 static uint32_t w = arc4random();
 
 void xorshift(unsigned int *start, int count) {
-    uint32_t t;
+    uint32_t t1, t2, t3, t4;
     uint32_t *p = start;
+    int i;
     
-    for(int i = 0 ; i < count ; ++i) {
-        t = x ^ (x << 11);
+    for(i = 0 ; i < count%4 ; ++i) {
+        t1 = x ^ (x << 11);
         x = y; y = z; z = w;
-        w = (w ^ (w >> 19)) ^ (t ^ (t >> 8));
+        w = (w ^ (w >> 19)) ^ (t1 ^ (t1 >> 8));
         *p = w;
         ++p;
+    }
+    
+    for(; i < count ; i += 4) {
+        t1 = x ^ (x << 11);
+        t2 = y ^ (y << 11);
+        t3 = z ^ (z << 11);
+        t4 = w ^ (w << 11);
+        x = (w ^ (w >> 19)) ^ (t1 ^ (t1 >> 8));
+        y = (x ^ (x >> 19)) ^ (t2 ^ (t2 >> 8));
+        z = (y ^ (y >> 19)) ^ (t3 ^ (t3 >> 8));
+        w = (z ^ (z >> 19)) ^ (t4 ^ (t4 >> 8));
+        *(p++) = x;
+        *(p++) = y;
+        *(p++) = z;
+        *(p++) = w;
     }
 }
 
