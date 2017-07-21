@@ -71,8 +71,9 @@ void _xorshift_normal(float *start, int count, float mu, float sigma) {
     float *p = start; // ~ N(mu, sigma)
     float x1, x2; // in (0, 1)
     float divisor = nextafterf(UINT32_MAX, UINT64_MAX);
+    int i = count%2;
     
-    if(count%2 == 1) {
+    if(i == 1) {
         t1 = x ^ (x << 11);
         x = y; y = z; z = w;
         w = (w ^ (w >> 19)) ^ (t1 ^ (t1 >> 8));
@@ -86,7 +87,7 @@ void _xorshift_normal(float *start, int count, float mu, float sigma) {
         *(p++) = sigma * sqrtf(-2*logf(x1)) * cosf(2*M_PI*x2) + mu;
     }
     
-    for(int i = 0 ; i < count ; i+=2) {
+    for(; i < count ; i+=2) {
         t1 = x ^ (x << 11);
         t2 = y ^ (y << 11);
         t3 = z ^ (z << 11);
