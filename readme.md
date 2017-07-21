@@ -4,7 +4,7 @@ Specialized to generate many random numbers.
 
 ## Faster than `arc4random_buf`
 
-7x faster than `arc4random_buf`.
+11x faster than `arc4random_buf`.
 
 ```swift
 func testPerformance_arc4random() {
@@ -14,7 +14,7 @@ func testPerformance_arc4random() {
         for _ in 0..<100 {
             arc4random_buf(&a, MemoryLayout<UInt32>.size * a.count)
         }
-    } // 1.108 sec
+    } // 1.093 sec
 }
 func testPerformance_xorshift() {
     let count = 1_000_000
@@ -23,7 +23,7 @@ func testPerformance_xorshift() {
         for _ in 0..<100 {
             xorshift(start: &a, count: a.count)
         }
-    } // 0.156 sec
+    } // 0.098 sec
 }
 ```
 
