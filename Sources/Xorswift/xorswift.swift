@@ -1,10 +1,16 @@
 
-import Cxorswift
+// state
+var x = arc4random()
+var y = arc4random()
+var z = arc4random()
+var w = arc4random()
+
+// MARK: - xorshift
 
 /// Generate single random UInt32 number.
 public func xorshift() -> UInt32 {
     var ret: UInt32 = 0
-    xorshift(&ret, 1)
+    xorshift(start: &ret, count: 1)
     return ret
 }
 
@@ -13,9 +19,38 @@ public func xorshift() -> UInt32 {
 ///   - `count` >= 0
 public func xorshift(start: UnsafeMutablePointer<UInt32>, count: Int) {
     precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
-
-    xorshift(start, Int32(count))
+    
+    var p = start
+    
+    for _ in 0..<count%4 {
+        let t = x ^ (x << 11)
+        x = y; y = z; z = w;
+        w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))
+        p.pointee = w
+        p += 1
+    }
+    
+    for _ in 0..<count/4 {
+        let t1 = x ^ (x << 11)
+        let t2 = y ^ (y << 11)
+        let t3 = z ^ (z << 11)
+        let t4 = w ^ (w << 11)
+        x = (w ^ (w >> 19)) ^ (t1 ^ (t1 >> 8))
+        y = (x ^ (x >> 19)) ^ (t2 ^ (t2 >> 8))
+        z = (y ^ (y >> 19)) ^ (t3 ^ (t3 >> 8))
+        w = (z ^ (z >> 19)) ^ (t4 ^ (t4 >> 8))
+        p.pointee = x
+        p += 1
+        p.pointee = y
+        p += 1
+        p.pointee = z
+        p += 1
+        p.pointee = w
+        p += 1
+    }
 }
+
+// MARK: - xorshift_uniform
 
 /// Sample random Float number from unifrom distribution [low, high).
 /// - Precondition:
@@ -25,7 +60,7 @@ public func xorshift_uniform(low: Float = 0,
     precondition(low < high, "Invalid argument: must be `low` < `high`")
     
     var ret: Float = 0
-    xorshift_uniform(&ret, 1, low, high)
+    xorshift_uniform(start: &ret, count: 1, low: low, high: high)
     return ret
 }
 
@@ -40,7 +75,48 @@ public func xorshift_uniform(start: UnsafeMutablePointer<Float>,
     precondition(low < high, "Invalid argument: must be `low` < `high`")
     precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
     
-    xorshift_uniform(start, Int32(count), low, high)
+    var p = start
+    let multiplier = (high-low) / nextafterf(Float(UInt32.max), Float.infinity)
+    
+    for _ in 0..<count%4 {
+        let t = x ^ (x << 11)
+        x = y; y = z; z = w;
+        w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))
+        p.pointee = Float(w) * multiplier + low
+        p += 1
+    }
+    
+    for _ in 0..<count/4 {
+        let t1 = x ^ (x << 11)
+        let t2 = y ^ (y << 11)
+        let t3 = z ^ (z << 11)
+        let t4 = w ^ (w << 11)
+        x = (w ^ (w >> 19)) ^ (t1 ^ (t1 >> 8))
+        y = (x ^ (x >> 19)) ^ (t2 ^ (t2 >> 8))
+        z = (y ^ (y >> 19)) ^ (t3 ^ (t3 >> 8))
+        w = (z ^ (z >> 19)) ^ (t4 ^ (t4 >> 8))
+        p.pointee = Float(x) * multiplier + low
+        p += 1
+        p.pointee = Float(y) * multiplier + low
+        p += 1
+        p.pointee = Float(z) * multiplier + low
+        p += 1
+        p.pointee = Float(w) * multiplier + low
+        p += 1
+    }
+}
+
+// MARK: - xorshift_normal
+
+/// Sample random number from normal distribution N(mu, sigma).
+/// - Precondition:
+///   - `sigma` >= 0
+public func xorshift_normal(mu: Float = 0, sigma: Float = 1) -> Float {
+    precondition(sigma >= 0, "Invalid argument: `sigma` must not be less than 0.")
+    
+    var ret: Float = 0
+    _xorshift_normal(start: &ret, count: 1, mu: mu, sigma: sigma)
+    return ret
 }
 
 #if os(macOS) || os(iOS)
@@ -63,12 +139,12 @@ public func xorshift_uniform(start: UnsafeMutablePointer<Float>,
         
         let buf1 = UnsafeMutablePointer<UInt32>.allocate(capacity: count)
         defer { buf1.deallocate(capacity: count) }
-        xorshift(buf1, _count)
+        xorshift(start: buf1, count: count)
         vDSP_vfltu32(buf1, 1, start, 1, __count)
         
         let buf2 = UnsafeMutablePointer<Float>.allocate(capacity: count)
         defer { buf2.deallocate(capacity: count) }
-        xorshift(buf1, _count)
+        xorshift(start: buf1, count: count)
         vDSP_vfltu32(buf1, 1, buf2, 1, __count)
         
         
@@ -108,23 +184,9 @@ public func xorshift_uniform(start: UnsafeMutablePointer<Float>,
                                 count: Int,
                                 mu: Float = 0,
                                 sigma: Float = 1) {
-        precondition(sigma >= 0, "Invalid argument: `sigma` must not be less than 0.")
-        precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
-        
-        _xorshift_normal(start, Int32(count), mu, sigma)
+        _xorshift_normal(start: start, count: Int32(count), mu: mu, sigma: sigma)
     }
 #endif
-
-/// Sample random number from normal distribution N(mu, sigma).
-/// - Precondition:
-///   - `sigma` >= 0
-public func xorshift_normal(mu: Float = 0, sigma: Float = 1) -> Float {
-    precondition(sigma >= 0, "Invalid argument: `sigma` must not be less than 0.")
-    
-    var ret: Float = 0
-    _xorshift_normal(&ret, 1, mu, sigma)
-    return ret
-}
 
 /// Sample random numbers from normal distribution N(mu, sigma).
 ///
@@ -139,5 +201,46 @@ public func _xorshift_normal(start: UnsafeMutablePointer<Float>,
     precondition(sigma >= 0, "Invalid argument: `sigma` must not be less than 0.")
     precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
     
-    _xorshift_normal(start, Int32(count), mu, sigma)
+    var p = start
+    let divisor = nextafterf(Float(UInt32.max), Float.infinity)
+    
+    if count%2 == 1 {
+        var t: UInt32
+        t = x ^ (x << 11)
+        x = y; y = z; z = w;
+        w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))
+        let x1 = Float(w) / divisor + Float.leastNormalMagnitude
+        
+        t = x ^ (x << 11)
+        x = y; y = z; z = w;
+        w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))
+        let x2 = Float(w) / divisor + Float.leastNormalMagnitude
+        
+        p.pointee = sigma*sqrtf(-2*logf(x1))*cosf(2*Float.pi*x2) + mu
+        p += 1
+    }
+    
+    for _ in 0..<count/2 {
+        var x1, x2: Float
+        let t1 = x ^ (x << 11)
+        let t2 = y ^ (y << 11)
+        let t3 = z ^ (z << 11)
+        let t4 = w ^ (w << 11)
+        x = (w ^ (w >> 19)) ^ (t1 ^ (t1 >> 8))
+        y = (x ^ (x >> 19)) ^ (t2 ^ (t2 >> 8))
+        z = (y ^ (y >> 19)) ^ (t3 ^ (t3 >> 8))
+        w = (z ^ (z >> 19)) ^ (t4 ^ (t4 >> 8))
+        
+        x1 = Float(x) / divisor + Float.leastNormalMagnitude
+        x2 = Float(y) / divisor + Float.leastNormalMagnitude
+        p.pointee = sigma*sqrtf(-2*logf(x1))*cosf(2*Float.pi*x2) + mu
+        p += 1
+        
+        x1 = Float(z) / divisor + Float.leastNormalMagnitude
+        x2 = Float(w) / divisor + Float.leastNormalMagnitude
+        p.pointee = sigma*sqrtf(-2*logf(x1))*cosf(2*Float.pi*x2) + mu
+        p += 1
+        
+        
+    }
 }

@@ -23,7 +23,7 @@ class XorswiftTests: XCTestCase {
         }
     }
     
-    func testXorshift_float() {
+    func testXorshift_uniform() {
         do {
             let count = 1_000_000
             var a = [Float](repeating: 0, count: count)

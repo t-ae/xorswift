@@ -44,6 +44,7 @@ class PerformanceTests: XCTestCase {
         }
     }
     
+    
     #if os(macOS)
     func testPerformance_arc4random_uniform() {
         let count = 1_000_000
