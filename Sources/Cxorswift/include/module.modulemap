@@ -1,4 +1,0 @@
-module Cxorswift {
-    header "xorswift.h"
-    export *
-}

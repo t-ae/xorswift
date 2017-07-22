@@ -3,8 +3,5 @@
 import PackageDescription
 
 let package = Package(
-    name: "Xorswift",
-    targets: [
-        Target(name: "Xorswift", dependencies: ["Cxorswift"])
-    ]
+    name: "Xorswift"
 )
