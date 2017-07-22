@@ -123,6 +123,7 @@ public func xorshift_normal(mu: Float = 0, sigma: Float = 1) -> Float {
     import Accelerate
     
     /// Sample random numbers from normal distribution N(mu, sigma).
+    /// Using Accelerate framework.
     /// - Precondition:
     ///   - `count` >= 0
     ///   - `sigma` >= 0
@@ -190,7 +191,7 @@ public func xorshift_normal(mu: Float = 0, sigma: Float = 1) -> Float {
 
 /// Sample random numbers from normal distribution N(mu, sigma).
 ///
-/// - Note: It's slower than `xorshift_normal` in apple devices, but use less memories.
+/// - Note: This function is slower than `xorshift_normal` with Accelerate framework, but uses less memories.
 /// - Precondition:
 ///   - `count` >= 0
 ///   - `sigma` >= 0
