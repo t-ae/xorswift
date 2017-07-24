@@ -53,7 +53,7 @@ class PerformanceTests: XCTestCase {
             for _ in 0..<100 {
                 var buf = UnsafeMutablePointer<UInt32>.allocate(capacity: count)
                 defer { buf.deallocate(capacity: count) }
-                arc4random_buf(buf, count)
+                arc4random_buf(buf, MemoryLayout<UInt32>.size * count)
                 vDSP_vfltu32(buf, 1, &a, 1, vDSP_Length(count))
                 var divisor = Float(UInt64(UInt32.max)+1)
                 vDSP_vsdiv(a, 1, &divisor, &a, 1, vDSP_Length(count))
