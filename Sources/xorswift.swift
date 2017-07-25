@@ -241,7 +241,5 @@ public func _xorshift_normal(start: UnsafeMutablePointer<Float>,
         x2 = Float(w) / divisor + Float.leastNormalMagnitude
         p.pointee = sigma*sqrtf(-2*logf(x1))*cosf(2*Float.pi*x2) + mu
         p += 1
-        
-        
     }
 }
