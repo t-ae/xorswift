@@ -1,10 +1,3 @@
-//
-//  RangeTests.swift
-//  Xorswift
-//
-//  Created by Araki on 2017/07/15.
-//
-//
 
 import XCTest
 
