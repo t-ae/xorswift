@@ -138,15 +138,13 @@ public func xorshift_normal(mu: Float = 0, sigma: Float = 1) -> Float {
         var _count = Int32(count)
         let __count = vDSP_Length(count)
         
-        let buf1 = UnsafeMutablePointer<UInt32>.allocate(capacity: count)
-        defer { buf1.deallocate(capacity: count) }
-        xorshift(start: buf1, count: count)
+        var buf1 = [UInt32](repeating: 0, count: count)
+        xorshift(start: &buf1, count: count)
         vDSP_vfltu32(buf1, 1, start, 1, __count)
         
-        let buf2 = UnsafeMutablePointer<Float>.allocate(capacity: count)
-        defer { buf2.deallocate(capacity: count) }
-        xorshift(start: buf1, count: count)
-        vDSP_vfltu32(buf1, 1, buf2, 1, __count)
+        var buf2 = [Float](repeating: 0, count: count)
+        xorshift(start: &buf1, count: count)
+        vDSP_vfltu32(buf1, 1, &buf2, 1, __count)
         
         
         var flt_min = Float.leastNormalMagnitude
@@ -158,7 +156,7 @@ public func xorshift_normal(mu: Float = 0, sigma: Float = 1) -> Float {
         
         // Y in (0, 2)
         var mulY = 2 / divisor
-        vDSP_vsmsa(buf2, 1, &mulY, &flt_min, buf2, 1, __count)
+        vDSP_vsmsa(buf2, 1, &mulY, &flt_min, &buf2, 1, __count)
         
         // sigma*sqrt(-2*log(X))
         vvlogf(start, start, &_count)
@@ -167,7 +165,7 @@ public func xorshift_normal(mu: Float = 0, sigma: Float = 1) -> Float {
         vvsqrtf(start, start, &_count)
         
         // cospi(Y)
-        vvcospif(buf2, buf2, &_count)
+        vvcospif(&buf2, buf2, &_count)
         
         vDSP_vmul(start, 1, buf2, 1, start, 1, __count)
         
