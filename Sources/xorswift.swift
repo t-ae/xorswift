@@ -28,7 +28,9 @@ public func xorshift(count: Int) -> [UInt32] {
 
 /// Generate random UInt32 numbers.
 public func xorshift(_ buffer: UnsafeMutableBufferPointer<UInt32>) {
-    xorshift(start: buffer.baseAddress!, count: buffer.count)
+    buffer.baseAddress.map {
+        xorshift(start: $0, count: buffer.count)
+    }
 }
 
 /// Generate random UInt32 numbers.
@@ -102,7 +104,9 @@ public func xorshift_uniform(count: Int,
 public func xorshift_uniform(_ buffer: UnsafeMutableBufferPointer<Float>,
                              low: Float = 0,
                              high: Float = 1) {
-    xorshift_uniform(start: buffer.baseAddress!, count: buffer.count, low: low, high: high)
+    buffer.baseAddress.map {
+        xorshift_uniform(start: $0, count: buffer.count, low: low, high: high)
+    }
 }
 
 /// Sample random Float numbers from unifrom distribution [low, high).
@@ -183,7 +187,9 @@ public func xorshift_normal(count: Int,
 public func xorshift_normal(_ buffer: UnsafeMutableBufferPointer<Float>,
                             mu: Float = 0,
                             sigma: Float = 1) {
-    xorshift_normal(start: buffer.baseAddress!, count: buffer.count, mu: mu, sigma: sigma)
+    buffer.baseAddress.map {
+        xorshift_normal(start: $0, count: buffer.count, mu: mu, sigma: sigma)
+    }
 }
 
 #if os(macOS) || os(iOS)
