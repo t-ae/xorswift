@@ -15,6 +15,23 @@ public func xorshift() -> UInt32 {
 }
 
 /// Generate random UInt32 numbers.
+/// - Precondition:
+///   - `count` >= 0
+public func xorshift(count: Int) -> [UInt32] {
+    precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
+    var ret = [UInt32](repeating: 0, count: count)
+    ret.withUnsafeMutableBufferPointer {
+        xorshift($0)
+    }
+    return ret
+}
+
+/// Generate random UInt32 numbers.
+public func xorshift(_ buffer: UnsafeMutableBufferPointer<UInt32>) {
+    xorshift(start: buffer.baseAddress!, count: buffer.count)
+}
+
+/// Generate random UInt32 numbers.
 /// - Precondition: 
 ///   - `count` >= 0
 public func xorshift(start: UnsafeMutablePointer<UInt32>, count: Int) {
@@ -62,6 +79,30 @@ public func xorshift_uniform(low: Float = 0,
     var ret: Float = 0
     xorshift_uniform(start: &ret, count: 1, low: low, high: high)
     return ret
+}
+
+/// Sample random Float numbers from unifrom distribution [low, high).
+/// - Precondition:
+///   - `count` >= 0
+///   - `low` < `high`
+public func xorshift_uniform(count: Int,
+                             low: Float = 0,
+                             high: Float = 1) -> [Float] {
+    precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
+    var ret = [Float](repeating: 0,  count: count)
+    ret.withUnsafeMutableBufferPointer {
+        xorshift_uniform($0, low: low, high: high)
+    }
+    return ret
+}
+
+/// Sample random Float numbers from unifrom distribution [low, high).
+/// - Precondition:
+///   - `low` < `high`
+public func xorshift_uniform(_ buffer: UnsafeMutableBufferPointer<Float>,
+                             low: Float = 0,
+                             high: Float = 1) {
+    xorshift_uniform(start: buffer.baseAddress!, count: buffer.count, low: low, high: high)
 }
 
 /// Sample random Float numbers from unifrom distribution [low, high).
@@ -117,6 +158,32 @@ public func xorshift_normal(mu: Float = 0, sigma: Float = 1) -> Float {
     var ret: Float = 0
     _xorshift_normal(start: &ret, count: 1, mu: mu, sigma: sigma)
     return ret
+}
+
+/// Sample random numbers from normal distribution N(mu, sigma).
+/// Using Accelerate framework.
+/// - Precondition:
+///   - `count` >= 0
+///   - `sigma` >= 0
+public func xorshift_normal(count: Int,
+                            mu: Float = 0,
+                            sigma: Float = 1) -> [Float] {
+    precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
+    var ret = [Float](repeating: 0,  count: count)
+    ret.withUnsafeMutableBufferPointer {
+        xorshift_normal($0, mu: mu, sigma: sigma)
+    }
+    return ret
+}
+
+/// Sample random numbers from normal distribution N(mu, sigma).
+/// Using Accelerate framework.
+/// - Precondition:
+///   - `sigma` >= 0
+public func xorshift_normal(_ buffer: UnsafeMutableBufferPointer<Float>,
+                            mu: Float = 0,
+                            sigma: Float = 1) {
+    xorshift_normal(start: buffer.baseAddress!, count: buffer.count, mu: mu, sigma: sigma)
 }
 
 #if os(macOS) || os(iOS)

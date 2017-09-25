@@ -31,18 +31,17 @@ class XorswiftTests: XCTestCase {
             xorshift_uniform(start: &a, count: count, low: 1, high: 2)
             let mean = a.reduce(0, +) / Float(a.count)
             
-            XCTAssertEqualWithAccuracy(mean, 1.5, accuracy: 1e-3)
+            XCTAssertEqual(mean, 1.5, accuracy: 1e-3)
             XCTAssert(a.min()! >= 1)
             XCTAssert(a.max()! < 2)
         }
         do {
             let count = 1_000_002
-            var a = [Float](repeating: 0, count: count)
             
-            xorshift_uniform(start: &a, count: count, low: 1, high: 2)
+            let a = xorshift_uniform(count: count, low: 1, high: 2)
             let mean = a.reduce(0, +) / Float(a.count)
             
-            XCTAssertEqualWithAccuracy(mean, 1.5, accuracy: 1e-3)
+            XCTAssertEqual(mean, 1.5, accuracy: 1e-3)
             XCTAssert(a.min()! >= 1)
             XCTAssert(a.max()! < 2)
         }
@@ -67,8 +66,20 @@ class XorswiftTests: XCTestCase {
             let mean2: Float = a.map { $0*$0 }.reduce(0, +) / Float(a.count)
             let variance = mean2 - mean*mean
             
-            XCTAssertEqualWithAccuracy(mean, -1, accuracy: 1e-2)
-            XCTAssertEqualWithAccuracy(variance, 0.5*0.5, accuracy: 1e-2)
+            XCTAssertEqual(mean, -1, accuracy: 1e-2)
+            XCTAssertEqual(variance, 0.5*0.5, accuracy: 1e-2)
+        }
+        do {
+            let count = 1_000_001
+            
+            let a = xorshift_normal(count: count, mu: -1, sigma: 0.5)
+            
+            let mean = a.reduce(0, +) / Float(a.count)
+            let mean2: Float = a.map { $0*$0 }.reduce(0, +) / Float(a.count)
+            let variance = mean2 - mean*mean
+            
+            XCTAssertEqual(mean, -1, accuracy: 1e-2)
+            XCTAssertEqual(variance, 0.5*0.5, accuracy: 1e-2)
         }
         do {
             let count = 1_001
@@ -98,8 +109,8 @@ class XorswiftTests: XCTestCase {
             let mean2: Float = a.map { $0*$0 }.reduce(0, +) / Float(a.count)
             let variance = mean2 - mean*mean
             
-            XCTAssertEqualWithAccuracy(mean, -1, accuracy: 1e-2)
-            XCTAssertEqualWithAccuracy(variance, 0.5*0.5, accuracy: 1e-2)
+            XCTAssertEqual(mean, -1, accuracy: 1e-2)
+            XCTAssertEqual(variance, 0.5*0.5, accuracy: 1e-2)
         }
         do {
             let count = 1_001
