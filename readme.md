@@ -27,7 +27,6 @@ func testPerformance_xorshift() {
 }
 ```
 
-## Two `Float` utilities
+## Sample from uniform/normal distribution
 
-- `xorshift_uniform(start: UnsafeMutablePointer<Float>, count: Int, low: Float, high: Float)`
-- `xorshift_normal(start: UnsafeMutablePointer<Float>, count: Int, mu: Float, sigma: Float)`
+`xorshift_uniform`/`xorshift_normal` for `Float`/`Double`.
