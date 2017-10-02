@@ -38,7 +38,7 @@ class XorswiftTests: XCTestCase {
         do {
             let count = 1_000_002
             
-            let a = xorshift_uniform(count: count, low: 1, high: 2)
+            let a: [Float] = xorshift_uniform(count: count, low: 1, high: 2)
             let mean = a.reduce(0, +) / Float(a.count)
             
             XCTAssertEqual(mean, 1.5, accuracy: 1e-3)
@@ -72,7 +72,7 @@ class XorswiftTests: XCTestCase {
         do {
             let count = 1_000_001
             
-            let a = xorshift_normal(count: count, mu: -1, sigma: 0.5)
+            let a: [Float] = xorshift_normal(count: count, mu: -1, sigma: 0.5)
             
             let mean = a.reduce(0, +) / Float(a.count)
             let mean2: Float = a.map { $0*$0 }.reduce(0, +) / Float(a.count)
