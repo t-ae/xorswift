@@ -287,7 +287,7 @@ public func _xorshift_normal(start: UnsafeMutablePointer<Double>,
     precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
     
     var p = start
-    let divisor = Double(UInt32.max) + 1
+    let divisor = nextafter(Double(UInt32.max), Double.infinity)
     
     if count%2 == 1 {
         var t: UInt32

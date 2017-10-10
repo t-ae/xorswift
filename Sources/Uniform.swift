@@ -53,7 +53,7 @@ func _xorshift_uniform<T: FloatingPoint>(start: UnsafeMutablePointer<T>,
     precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
     
     var p = start
-    let multiplier = (high-low) / (T(UInt32.max) + 1)
+    let multiplier = (high-low) / nextafter(T(UInt32.max), T.infinity)
     
     for _ in 0..<count%4 {
         let t = x ^ (x << 11)
@@ -88,7 +88,7 @@ func _xorshift_uniform<T: FloatingPoint>(start: UnsafeMutablePointer<T>,
 /// Sample random FloatingPoint number from unifrom distribution [low, high).
 /// - Precondition:
 ///   - `low` < `high`
-public func xorshift_uniform<T: FloatingPoint>(low: T = 0,
+func xorshift_uniform<T: FloatingPoint>(low: T = 0,
                                         high: T = 1) -> T {
     return _xorshift_uniform(low: low, high: high)
 }
@@ -97,7 +97,7 @@ public func xorshift_uniform<T: FloatingPoint>(low: T = 0,
 /// - Precondition:
 ///   - `count` >= 0
 ///   - `low` < `high`
-public func xorshift_uniform<T: FloatingPoint>(count: Int,
+func xorshift_uniform<T: FloatingPoint>(count: Int,
                                         low: T = 0,
                                         high: T = 1) -> [T] {
     return _xorshift_uniform(count: count, low: low, high: high)
@@ -106,7 +106,7 @@ public func xorshift_uniform<T: FloatingPoint>(count: Int,
 /// Sample random FloatingPoint numbers from unifrom distribution [low, high).
 /// - Precondition:
 ///   - `low` < `high`
-public func xorshift_uniform<T: FloatingPoint>(_ buffer: UnsafeMutableBufferPointer<T>,
+func xorshift_uniform<T: FloatingPoint>(_ buffer: UnsafeMutableBufferPointer<T>,
                                         low: T = 0,
                                         high: T = 1) {
     _xorshift_uniform(buffer, low: low, high: high)
@@ -116,10 +116,10 @@ public func xorshift_uniform<T: FloatingPoint>(_ buffer: UnsafeMutableBufferPoin
 /// - Precondition:
 ///   - `count` >= 0
 ///   - `low` < `high`
-public func xorshift_uniform<T: FloatingPoint>(start: UnsafeMutablePointer<T>,
-                                               count: Int,
-                                               low: T = 0,
-                                               high: T = 1) {
+func xorshift_uniform<T: FloatingPoint>(start: UnsafeMutablePointer<T>,
+                                        count: Int,
+                                        low: T = 0,
+                                        high: T = 1) {
     _xorshift_uniform(start: start, count: count, low: low, high: high)
 }
 
@@ -129,7 +129,7 @@ public func xorshift_uniform<T: FloatingPoint>(start: UnsafeMutablePointer<T>,
 /// - Precondition:
 ///   - `low` < `high`
 public func xorshift_uniform(low: Float = 0,
-                      high: Float = 1) -> Float {
+                             high: Float = 1) -> Float {
     return _xorshift_uniform(low: low, high: high)
 }
 
@@ -138,8 +138,8 @@ public func xorshift_uniform(low: Float = 0,
 ///   - `count` >= 0
 ///   - `low` < `high`
 public func xorshift_uniform(count: Int,
-                      low: Float = 0,
-                      high: Float = 1) -> [Float] {
+                             low: Float = 0,
+                             high: Float = 1) -> [Float] {
     return _xorshift_uniform(count: count, low: low, high: high)
 }
 
@@ -147,8 +147,8 @@ public func xorshift_uniform(count: Int,
 /// - Precondition:
 ///   - `low` < `high`
 public func xorshift_uniform(_ buffer: UnsafeMutableBufferPointer<Float>,
-                      low: Float = 0,
-                      high: Float = 1) {
+                             low: Float = 0,
+                             high: Float = 1) {
     _xorshift_uniform(buffer, low: low, high: high)
 }
 
@@ -170,7 +170,7 @@ public func xorshift_uniform(start: UnsafeMutablePointer<Float>,
 /// - Precondition:
 ///   - `low` < `high`
 public func xorshift_uniform(low: Double = 0,
-                      high: Double = 1) -> Double {
+                             high: Double = 1) -> Double {
     return _xorshift_uniform(low: low, high: high)
 }
 
@@ -179,8 +179,8 @@ public func xorshift_uniform(low: Double = 0,
 ///   - `count` >= 0
 ///   - `low` < `high`
 public func xorshift_uniform(count: Int,
-                      low: Double = 0,
-                      high: Double = 1) -> [Double] {
+                             low: Double = 0,
+                             high: Double = 1) -> [Double] {
     return _xorshift_uniform(count: count, low: low, high: high)
 }
 
@@ -188,8 +188,8 @@ public func xorshift_uniform(count: Int,
 /// - Precondition:
 ///   - `low` < `high`
 public func xorshift_uniform(_ buffer: UnsafeMutableBufferPointer<Double>,
-                      low: Double = 0,
-                      high: Double = 1) {
+                             low: Double = 0,
+                             high: Double = 1) {
     _xorshift_uniform(buffer, low: low, high: high)
 }
 

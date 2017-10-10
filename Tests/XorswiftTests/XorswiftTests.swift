@@ -32,8 +32,8 @@ class XorswiftTests: XCTestCase {
             let mean = a.reduce(0, +) / Float(a.count)
             
             XCTAssertEqual(mean, 1.5, accuracy: 1e-3)
-            XCTAssert(a.min()! >= 1)
-            XCTAssert(a.max()! < 2)
+            XCTAssertGreaterThanOrEqual(a.min()!, 1)
+            XCTAssertLessThan(a.max()!, 2)
         }
         do {
             let count = 1_000_002
@@ -42,8 +42,8 @@ class XorswiftTests: XCTestCase {
             let mean = a.reduce(0, +) / Float(a.count)
             
             XCTAssertEqual(mean, 1.5, accuracy: 1e-3)
-            XCTAssert(a.min()! >= 1)
-            XCTAssert(a.max()! < 2)
+            XCTAssertGreaterThanOrEqual(a.min()!, 1)
+            XCTAssertLessThan(a.max()!, 2)
         }
         do {
             let count = 0
