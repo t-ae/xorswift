@@ -1,4 +1,3 @@
-
 import Foundation
 
 func nextafter<T: FloatingPoint>(_ lhs: T, _ rhs: T) -> T {

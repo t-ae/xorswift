@@ -1,4 +1,3 @@
-
 import Foundation
 
 /// Generate single random UInt32 number.

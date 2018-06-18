@@ -1,4 +1,3 @@
-
 import Foundation
 
 var x = arc4random()

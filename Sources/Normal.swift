@@ -7,7 +7,7 @@ public func xorshift_normal(mu: Float = 0, sigma: Float = 1) -> Float {
     precondition(sigma >= 0, "Invalid argument: `sigma` must not be less than 0.")
     
     var ret: Float = 0
-    _xorshift_normal(start: &ret, count: 1, mu: mu, sigma: sigma)
+    xorshift_normal_no_accelerate(start: &ret, count: 1, mu: mu, sigma: sigma)
     return ret
 }
 
@@ -103,7 +103,7 @@ public func xorshift_normal(_ buffer: UnsafeMutableBufferPointer<Float>,
                                 count: Int,
                                 mu: Float = 0,
                                 sigma: Float = 1) {
-        _xorshift_normal(start: start, count: Int32(count), mu: mu, sigma: sigma)
+        xorshift_normal_no_accelerate(start: start, count: Int32(count), mu: mu, sigma: sigma)
     }
 #endif
 
@@ -113,7 +113,7 @@ public func xorshift_normal(_ buffer: UnsafeMutableBufferPointer<Float>,
 /// - Precondition:
 ///   - `count` >= 0
 ///   - `sigma` >= 0
-public func _xorshift_normal(start: UnsafeMutablePointer<Float>,
+public func xorshift_normal_no_accelerate(start: UnsafeMutablePointer<Float>,
                              count: Int,
                              mu: Float = 0,
                              sigma: Float = 1) {
@@ -123,7 +123,7 @@ public func _xorshift_normal(start: UnsafeMutablePointer<Float>,
     var p = start
     let divisor = nextafterf(Float(UInt32.max), Float.infinity)
     
-    if count%2 == 1 {
+    for _ in 0..<count%4 {
         var t: UInt32
         t = x ^ (x << 11)
         x = y; y = z; z = w;
@@ -139,7 +139,7 @@ public func _xorshift_normal(start: UnsafeMutablePointer<Float>,
         p += 1
     }
     
-    for _ in 0..<count/2 {
+    for _ in 0..<count/4 {
         var x1, x2: Float
         let t1 = x ^ (x << 11)
         let t2 = y ^ (y << 11)
@@ -153,11 +153,15 @@ public func _xorshift_normal(start: UnsafeMutablePointer<Float>,
         
         x1 = Float(x) / divisor + Float.leastNormalMagnitude
         x2 = Float(y) / divisor + Float.leastNormalMagnitude
+        p.pointee = sigma*sqrtf(-2*logf(x1))*sinf(2*Float.pi*x2) + mu
+        p += 1
         p.pointee = sigma*sqrtf(-2*logf(x1))*cosf(2*Float.pi*x2) + mu
         p += 1
         
         x1 = Float(z) / divisor + Float.leastNormalMagnitude
         x2 = Float(w) / divisor + Float.leastNormalMagnitude
+        p.pointee = sigma*sqrtf(-2*logf(x1))*sinf(2*Float.pi*x2) + mu
+        p += 1
         p.pointee = sigma*sqrtf(-2*logf(x1))*cosf(2*Float.pi*x2) + mu
         p += 1
     }
@@ -173,7 +177,7 @@ public func xorshift_normal(mu: Double = 0, sigma: Double = 1) -> Double {
     precondition(sigma >= 0, "Invalid argument: `sigma` must not be less than 0.")
     
     var ret: Double = 0
-    _xorshift_normal(start: &ret, count: 1, mu: mu, sigma: sigma)
+    xorshift_normal_no_accelerate(start: &ret, count: 1, mu: mu, sigma: sigma)
     return ret
 }
 
@@ -269,7 +273,7 @@ public func xorshift_normal(_ buffer: UnsafeMutableBufferPointer<Double>,
                                 count: Int,
                                 mu: Double = 0,
                                 sigma: Double = 1) {
-        _xorshift_normal(start: start, count: Int32(count), mu: mu, sigma: sigma)
+        xorshift_normal_no_accelerate(start: start, count: Int32(count), mu: mu, sigma: sigma)
     }
 #endif
 
@@ -279,7 +283,7 @@ public func xorshift_normal(_ buffer: UnsafeMutableBufferPointer<Double>,
 /// - Precondition:
 ///   - `count` >= 0
 ///   - `sigma` >= 0
-public func _xorshift_normal(start: UnsafeMutablePointer<Double>,
+public func xorshift_normal_no_accelerate(start: UnsafeMutablePointer<Double>,
                              count: Int,
                              mu: Double = 0,
                              sigma: Double = 1) {
@@ -289,7 +293,7 @@ public func _xorshift_normal(start: UnsafeMutablePointer<Double>,
     var p = start
     let divisor = nextafter(Double(UInt32.max), Double.infinity)
     
-    if count%2 == 1 {
+    for _ in 0..<count%4 {
         var t: UInt32
         t = x ^ (x << 11)
         x = y; y = z; z = w;
@@ -305,7 +309,7 @@ public func _xorshift_normal(start: UnsafeMutablePointer<Double>,
         p += 1
     }
     
-    for _ in 0..<count/2 {
+    for _ in 0..<count/4 {
         var x1, x2: Double
         let t1 = x ^ (x << 11)
         let t2 = y ^ (y << 11)
@@ -319,11 +323,15 @@ public func _xorshift_normal(start: UnsafeMutablePointer<Double>,
         
         x1 = Double(x) / divisor + Double.leastNormalMagnitude
         x2 = Double(y) / divisor + Double.leastNormalMagnitude
+        p.pointee = sigma*sqrt(-2*log(x1))*sin(2*Double.pi*x2) + mu
+        p += 1
         p.pointee = sigma*sqrt(-2*log(x1))*cos(2*Double.pi*x2) + mu
         p += 1
         
         x1 = Double(z) / divisor + Double.leastNormalMagnitude
         x2 = Double(w) / divisor + Double.leastNormalMagnitude
+        p.pointee = sigma*sqrt(-2*log(x1))*sin(2*Double.pi*x2) + mu
+        p += 1
         p.pointee = sigma*sqrt(-2*log(x1))*cos(2*Double.pi*x2) + mu
         p += 1
     }

@@ -1,4 +1,3 @@
-
 import XCTest
 #if os(macOS)
     import Accelerate
@@ -51,10 +50,10 @@ class PerformanceTests: XCTestCase {
         var a = [Float](repeating: 0, count: count)
         measure {
             for _ in 0..<100 {
-                var buf = UnsafeMutablePointer<UInt32>.allocate(capacity: count)
-                defer { buf.deallocate(capacity: count) }
-                arc4random_buf(buf, MemoryLayout<UInt32>.size * count)
-                vDSP_vfltu32(buf, 1, &a, 1, vDSP_Length(count))
+                var buf = UnsafeMutableBufferPointer<UInt32>.allocate(capacity: count)
+                defer { buf.deallocate() }
+                arc4random_buf(buf.baseAddress, MemoryLayout<UInt32>.size * count)
+                vDSP_vfltu32(buf.baseAddress!, 1, &a, 1, vDSP_Length(count))
                 var divisor = Float(UInt64(UInt32.max)+1)
                 vDSP_vsdiv(a, 1, &divisor, &a, 1, vDSP_Length(count))
             }
@@ -89,7 +88,7 @@ class PerformanceTests: XCTestCase {
         var a = [Float](repeating: 0, count: count)
         measure {
             for _ in 0..<100 {
-                _xorshift_normal(start: &a, count: a.count, mu: 0, sigma: 1)
+                xorshift_normal_no_accelerate(start: &a, count: a.count, mu: 0, sigma: 1)
             }
         }
     }
