@@ -40,71 +40,84 @@ public func xorshift_normal(_ buffer: UnsafeMutableBufferPointer<Float>,
 }
 
 #if os(macOS) || os(iOS)
-    import Accelerate
+
+import Accelerate
+
+/// Sample random numbers from normal distribution N(mu, sigma).
+/// Using Accelerate framework.
+/// - Precondition:
+///   - `count` >= 0
+///   - `sigma` >= 0
+public func xorshift_normal(start: UnsafeMutablePointer<Float>,
+                            count: Int,
+                            mu: Float = 0,
+                            sigma: Float = 1) {
+    precondition(sigma >= 0, "Invalid argument: `sigma` must not be less than 0.")
+    precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
     
-    /// Sample random numbers from normal distribution N(mu, sigma).
-    /// Using Accelerate framework.
-    /// - Precondition:
-    ///   - `count` >= 0
-    ///   - `sigma` >= 0
-    public func xorshift_normal(start: UnsafeMutablePointer<Float>,
-                                count: Int,
-                                mu: Float = 0,
-                                sigma: Float = 1) {
-        
-        precondition(sigma >= 0, "Invalid argument: `sigma` must not be less than 0.")
-        precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
-        
-        var _count = Int32(count)
-        let __count = vDSP_Length(count)
-        
-        var buf1 = [UInt32](repeating: 0, count: count)
-        xorshift(start: &buf1, count: count)
-        vDSP_vfltu32(buf1, 1, start, 1, __count)
-        
-        var buf2 = [Float](repeating: 0, count: count)
-        xorshift(start: &buf1, count: count)
-        vDSP_vfltu32(buf1, 1, &buf2, 1, __count)
-        
-        
-        var flt_min = Float.leastNormalMagnitude
-        let divisor: Float = nextafter(Float(UInt32.max), Float.infinity)
-        
-        // X in (0, 1)
-        var mulX = 1 / divisor
-        vDSP_vsmsa(start, 1, &mulX, &flt_min, start, 1, __count)
-        
-        // Y in (0, 2)
-        var mulY = 2 / divisor
-        vDSP_vsmsa(buf2, 1, &mulY, &flt_min, &buf2, 1, __count)
-        
-        // sigma*sqrt(-2*log(X))
-        vvlogf(start, start, &_count)
-        var minus2sigma2 = -2 * sigma * sigma
-        vDSP_vsmul(start, 1, &minus2sigma2, start, 1, __count)
-        vvsqrtf(start, start, &_count)
-        
-        // cospi(Y)
-        vvcospif(&buf2, buf2, &_count)
-        
-        vDSP_vmul(start, 1, buf2, 1, start, 1, __count)
-        
-        if(mu != 0) {
-            var mu = mu
-            vDSP_vsadd(start, 1, &mu, start, 1, __count)
-        }
+    let _count = vDSP_Length(count)
+    
+    let half = (count+1)/2
+    let _half = vDSP_Length(half)
+    var __half = Int32(half)
+    
+    // First half: sigma*sqrt(-2log(X))*sin(Y) + mu
+    // Last half: sigma*sqrt(-2log(X))*cos(Y) + mu
+    
+    var buf1 = [UInt32](repeating: 0, count: half)
+    xorshift(start: &buf1, count: half)
+    vDSP_vfltu32(buf1, 1, start, 1, _half)
+    
+    var buf2 = [Float](repeating: 0, count: half*2)
+    xorshift(start: &buf1, count: half)
+    vDSP_vfltu32(buf1, 1, &buf2, 1, _half)
+    
+    var flt_min = Float.leastNormalMagnitude
+    let divisor: Float = nextafter(Float(UInt32.max), Float.infinity)
+    
+    // X in (0, 1)
+    var mulX = 1 / divisor
+    vDSP_vsmsa(start, 1, &mulX, &flt_min, start, 1, _half)
+    
+    // Y in (0, 2pi)
+    var mulY = 2*Float.pi / divisor
+    vDSP_vsmsa(buf2, 1, &mulY, &flt_min, &buf2, 1, _half)
+    
+    // sigma*sqrt(-2*log(X))
+    vvlogf(start, start, &__half)
+    var minus2sigma2 = -2 * sigma * sigma
+    vDSP_vsmul(start, 1, &minus2sigma2, start, 1, _half)
+    vvsqrtf(start, start, &__half)
+    // copy to last half
+    memcpy(start+half, start, (count - half) * MemoryLayout<Float>.size)
+    
+    // sincos(Y)
+    buf2.withUnsafeMutableBufferPointer {
+        let p = $0.baseAddress!
+        vvsincosf(p, p+half, p, &__half)
     }
+    
+    vDSP_vmul(start, 1, buf2, 1, start, 1, _count)
+    
+    if(mu != 0) {
+        var mu = mu
+        vDSP_vsadd(start, 1, &mu, start, 1, _count)
+    }
+}
+
 #else
-    /// Generate random numbers from normal distribution N(mu, sigma).
-    /// - Precondition:
-    ///   - `count` >= 0
-    ///   - `sigma` >= 0
-    public func xorshift_normal(start: UnsafeMutablePointer<Float>,
-                                count: Int,
-                                mu: Float = 0,
-                                sigma: Float = 1) {
-        xorshift_normal_no_accelerate(start: start, count: Int32(count), mu: mu, sigma: sigma)
-    }
+
+/// Generate random numbers from normal distribution N(mu, sigma).
+/// - Precondition:
+///   - `count` >= 0
+///   - `sigma` >= 0
+public func xorshift_normal(start: UnsafeMutablePointer<Float>,
+                            count: Int,
+                            mu: Float = 0,
+                            sigma: Float = 1) {
+    xorshift_normal_no_accelerate(start: start, count: Int32(count), mu: mu, sigma: sigma)
+}
+
 #endif
 
 /// Sample random numbers from normal distribution N(mu, sigma).
@@ -210,71 +223,84 @@ public func xorshift_normal(_ buffer: UnsafeMutableBufferPointer<Double>,
 }
 
 #if os(macOS) || os(iOS)
-    import Accelerate
+
+import Accelerate
+
+/// Sample random numbers from normal distribution N(mu, sigma).
+/// Using Accelerate framework.
+/// - Precondition:
+///   - `count` >= 0
+///   - `sigma` >= 0
+public func xorshift_normal(start: UnsafeMutablePointer<Double>,
+                            count: Int,
+                            mu: Double = 0,
+                            sigma: Double = 1) {
+    precondition(sigma >= 0, "Invalid argument: `sigma` must not be less than 0.")
+    precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
     
-    /// Sample random numbers from normal distribution N(mu, sigma).
-    /// Using Accelerate framework.
-    /// - Precondition:
-    ///   - `count` >= 0
-    ///   - `sigma` >= 0
-    public func xorshift_normal(start: UnsafeMutablePointer<Double>,
-                                count: Int,
-                                mu: Double = 0,
-                                sigma: Double = 1) {
-        
-        precondition(sigma >= 0, "Invalid argument: `sigma` must not be less than 0.")
-        precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
-        
-        var _count = Int32(count)
-        let __count = vDSP_Length(count)
-        
-        var buf1 = [UInt32](repeating: 0, count: count)
-        xorshift(start: &buf1, count: count)
-        vDSP_vfltu32D(buf1, 1, start, 1, __count)
-        
-        var buf2 = [Double](repeating: 0, count: count)
-        xorshift(start: &buf1, count: count)
-        vDSP_vfltu32D(buf1, 1, &buf2, 1, __count)
-        
-        
-        var flt_min = Double.leastNormalMagnitude
-        let divisor: Double = nextafter(Double(UInt32.max), Double.infinity)
-        
-        // X in (0, 1)
-        var mulX = 1 / divisor
-        vDSP_vsmsaD(start, 1, &mulX, &flt_min, start, 1, __count)
-        
-        // Y in (0, 2)
-        var mulY = 2 / divisor
-        vDSP_vsmsaD(buf2, 1, &mulY, &flt_min, &buf2, 1, __count)
-        
-        // sigma*sqrt(-2*log(X))
-        vvlog(start, start, &_count)
-        var minus2sigma2 = -2 * sigma * sigma
-        vDSP_vsmulD(start, 1, &minus2sigma2, start, 1, __count)
-        vvsqrt(start, start, &_count)
-        
-        // cospi(Y)
-        vvcospi(&buf2, buf2, &_count)
-        
-        vDSP_vmulD(start, 1, buf2, 1, start, 1, __count)
-        
-        if(mu != 0) {
-            var mu = mu
-            vDSP_vsaddD(start, 1, &mu, start, 1, __count)
-        }
+    let _count = vDSP_Length(count)
+    
+    let half = (count+1)/2
+    let _half = vDSP_Length(half)
+    var __half = Int32(half)
+    
+    // First half: sigma*sqrt(-2log(X))*sin(Y) + mu
+    // Last half: sigma*sqrt(-2log(X))*cos(Y) + mu
+    
+    var buf1 = [UInt32](repeating: 0, count: half)
+    xorshift(start: &buf1, count: half)
+    vDSP_vfltu32D(buf1, 1, start, 1, _half)
+    
+    var buf2 = [Double](repeating: 0, count: half*2)
+    xorshift(start: &buf1, count: half)
+    vDSP_vfltu32D(buf1, 1, &buf2, 1, _half)
+    
+    var flt_min = Double.leastNormalMagnitude
+    let divisor: Double = nextafter(Double(UInt32.max), Double.infinity)
+    
+    // X in (0, 1)
+    var mulX = 1 / divisor
+    vDSP_vsmsaD(start, 1, &mulX, &flt_min, start, 1, _half)
+    
+    // Y in (0, 2pi)
+    var mulY = 2*Double.pi / divisor
+    vDSP_vsmsaD(buf2, 1, &mulY, &flt_min, &buf2, 1, _half)
+    
+    // sigma*sqrt(-2*log(X))
+    vvlog(start, start, &__half)
+    var minus2sigma2 = -2 * sigma * sigma
+    vDSP_vsmulD(start, 1, &minus2sigma2, start, 1, _half)
+    vvsqrt(start, start, &__half)
+    // copy to last half
+    memcpy(start+half, start, (count - half) * MemoryLayout<Double>.size)
+    
+    // sincos(Y)
+    buf2.withUnsafeMutableBufferPointer {
+        let p = $0.baseAddress!
+        vvsincos(p, p+half, p, &__half)
     }
+    
+    vDSP_vmulD(start, 1, buf2, 1, start, 1, _count)
+    
+    if(mu != 0) {
+        var mu = mu
+        vDSP_vsaddD(start, 1, &mu, start, 1, _count)
+    }
+}
+
 #else
-    /// Generate random numbers from normal distribution N(mu, sigma).
-    /// - Precondition:
-    ///   - `count` >= 0
-    ///   - `sigma` >= 0
-    public func xorshift_normal(start: UnsafeMutablePointer<Double>,
-                                count: Int,
-                                mu: Double = 0,
-                                sigma: Double = 1) {
-        xorshift_normal_no_accelerate(start: start, count: Int32(count), mu: mu, sigma: sigma)
-    }
+
+/// Generate random numbers from normal distribution N(mu, sigma).
+/// - Precondition:
+///   - `count` >= 0
+///   - `sigma` >= 0
+public func xorshift_normal(start: UnsafeMutablePointer<Double>,
+                            count: Int,
+                            mu: Double = 0,
+                            sigma: Double = 1) {
+    xorshift_normal_no_accelerate(start: start, count: Int32(count), mu: mu, sigma: sigma)
+}
+
 #endif
 
 /// Sample random numbers from normal distribution N(mu, sigma).
