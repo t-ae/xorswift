@@ -2,7 +2,7 @@ import XCTest
 #if os(macOS)
     import Accelerate
 #endif
-import Xorswift
+@testable import Xorswift
 
 #if !SWIFT_PACKAGE
 class PerformanceTests: XCTestCase {
@@ -61,12 +61,22 @@ class PerformanceTests: XCTestCase {
     }
     #endif
     
-    func testPerformance_xorshift_uniform() {
+    func testPerformance_xorshift_uniform_float() {
         let count = 1_000_000
         var a = [Float](repeating: 0, count: count)
         measure {
             for _ in 0..<100 {
                 xorshift_uniform(start: &a, count: a.count, low: 0, high: 1)
+            }
+        }
+    }
+    
+    func testPerformance_xorshift_uniform_01_float() {
+        let count = 1_000_000
+        var a = [Float](repeating: 0, count: count)
+        measure {
+            for _ in 0..<100 {
+                xorshift_uniform(start: &a, count: a.count)
             }
         }
     }
