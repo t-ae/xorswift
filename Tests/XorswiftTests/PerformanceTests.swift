@@ -4,9 +4,10 @@ import XCTest
 #endif
 @testable import Xorswift
 
-#if !SWIFT_PACKAGE
 class PerformanceTests: XCTestCase {
-    
+}
+
+extension PerformanceTests {
     func testPerformance_arc4random_single() {
         measure {
             for _ in 0..<10_000_000 {
@@ -22,7 +23,9 @@ class PerformanceTests: XCTestCase {
             }
         }
     }
-    
+}
+
+extension PerformanceTests {
     func testPerformance_arc4random() {
         let count = 1_000_000
         var a = [UInt32](repeating: 0, count: count)
@@ -42,8 +45,9 @@ class PerformanceTests: XCTestCase {
             }
         }
     }
-    
-    
+}
+
+extension PerformanceTests {
     #if os(macOS)
     func testPerformance_arc4random_uniform() {
         let count = 1_000_000
@@ -80,9 +84,11 @@ class PerformanceTests: XCTestCase {
             }
         }
     }
-    
+}
+
+extension PerformanceTests {
     #if os(macOS)
-    func testPerformance_xorshift_normal_accelerate() {
+    func testPerformance_xorshift_normal_accelerate_float() {
         let count = 300_000
         var a = [Float](repeating: 0, count: count)
         measure {
@@ -93,7 +99,7 @@ class PerformanceTests: XCTestCase {
     }
     #endif
     
-    func testPerformance_xorshift_normal() {
+    func testPerformance_xorshift_normal_no_accelerate_float() {
         let count = 300_000
         var a = [Float](repeating: 0, count: count)
         measure {
@@ -103,4 +109,27 @@ class PerformanceTests: XCTestCase {
         }
     }
 }
-#endif
+
+extension PerformanceTests {
+    #if os(macOS)
+    func testPerformance_xorshift_normal_accelerate_double() {
+        let count = 300_000
+        var a = [Double](repeating: 0, count: count)
+        measure {
+            for _ in 0..<100 {
+                xorshift_normal(start: &a, count: a.count, mu: 0, sigma: 1)
+            }
+        }
+    }
+    #endif
+    
+    func testPerformance_xorshift_normal_no_accelerate_double() {
+        let count = 300_000
+        var a = [Double](repeating: 0, count: count)
+        measure {
+            for _ in 0..<100 {
+                xorshift_normal_no_accelerate(start: &a, count: a.count, mu: 0, sigma: 1)
+            }
+        }
+    }
+}
