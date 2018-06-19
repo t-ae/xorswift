@@ -11,6 +11,7 @@ class RangeTests: XCTestCase {
             
             XCTAssertGreaterThan(0/nextmax+min, 0)
             XCTAssertLessThan(Float(max)/nextmax+min, 1)
+            XCTAssertFalse(log(min).isNaN)
         }
         do {
             let max = UInt32.max
@@ -19,6 +20,7 @@ class RangeTests: XCTestCase {
             
             XCTAssertGreaterThan(0/nextmax+min, 0)
             XCTAssertLessThan(Double(max)/nextmax+min, 1)
+            XCTAssertFalse(log(min).isNaN)
         }
     }
 
