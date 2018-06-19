@@ -1,44 +1,6 @@
 import Foundation
 
-// MARK: - Internal
-
-/// Sample random number from unifrom distribution [low, high).
-/// - Precondition:
-///   - `low` < `high`
-func xorshift_uniform_generic<T: FloatDouble>(low: T = 0,
-                                              high: T = 1) -> T {
-    precondition(low < high, "Invalid argument: must be `low` < `high`")
-    
-    var ret: T = 0
-    xorshift_uniform_generic(start: &ret, count: 1, low: low, high: high)
-    return ret
-}
-
-/// Sample random numbers from unifrom distribution [low, high).
-/// - Precondition:
-///   - `count` >= 0
-///   - `low` < `high`
-func xorshift_uniform_generic<T: FloatDouble>(count: Int,
-                                              low: T = 0,
-                                              high: T = 1) -> [T] {
-    precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
-    var ret = [T](repeating: 0,  count: count)
-    ret.withUnsafeMutableBufferPointer {
-        xorshift_uniform_generic($0, low: low, high: high)
-    }
-    return ret
-}
-
-/// Sample random numbers from unifrom distribution [low, high).
-/// - Precondition:
-///   - `low` < `high`
-func xorshift_uniform_generic<T: FloatDouble>(_ buffer: UnsafeMutableBufferPointer<T>,
-                                              low: T = 0,
-                                              high: T = 1) {
-    buffer.baseAddress.map {
-        xorshift_uniform_generic(start: $0, count: buffer.count, low: low, high: high)
-    }
-}
+// MARK: - Generic
 
 /// Sample random numbers from unifrom distribution [low, high).
 /// - Precondition:
@@ -88,9 +50,20 @@ func xorshift_uniform_generic<T: FloatDouble>(start: UnsafeMutablePointer<T>,
 /// Sample random Float number from unifrom distribution [low, high).
 /// - Precondition:
 ///   - `low` < `high`
-public func xorshift_uniform(low: Float = 0,
-                             high: Float = 1) -> Float {
-    return xorshift_uniform_generic(low: low, high: high)
+public func xorshift_uniform(low: Float,
+                             high: Float) -> Float {
+    var ret: Float = 0
+    xorshift_uniform_generic(start: &ret, count: 1, low: low, high: high)
+    return ret
+}
+
+/// Sample random Float number from unifrom distribution [0, 1).
+///
+/// Slightly faster than `xorshift_uniform(low: 0, high: 1)`.
+public func xorshift_uniform() -> Float {
+    var ret: Float = 0
+    xorshift_uniform(start: &ret, count: 1)
+    return ret
 }
 
 /// Sample random Float numbers from unifrom distribution [low, high).
@@ -100,7 +73,11 @@ public func xorshift_uniform(low: Float = 0,
 public func xorshift_uniform(count: Int,
                              low: Float,
                              high: Float) -> [Float] {
-    return xorshift_uniform_generic(count: count, low: low, high: high)
+    var ret = [Float](repeating: 0,  count: count)
+    ret.withUnsafeMutableBufferPointer {
+        xorshift_uniform_generic(start: $0.baseAddress!, count: $0.count, low: low, high: high)
+    }
+    return ret
 }
 
 /// Sample random Float numbers from unifrom distribution [0, 1).
@@ -109,7 +86,6 @@ public func xorshift_uniform(count: Int,
 /// - Precondition:
 ///   - `count` >= 0
 public func xorshift_uniform(count: Int) -> [Float] {
-    precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
     var ret = [Float](repeating: 0,  count: count)
     ret.withUnsafeMutableBufferPointer {
         xorshift_uniform(start: $0.baseAddress!, count: $0.count)
@@ -123,14 +99,18 @@ public func xorshift_uniform(count: Int) -> [Float] {
 public func xorshift_uniform(_ buffer: UnsafeMutableBufferPointer<Float>,
                              low: Float,
                              high: Float) {
-    xorshift_uniform_generic(buffer, low: low, high: high)
+    buffer.baseAddress.map {
+        xorshift_uniform_generic(start: $0, count: buffer.count, low: low, high: high)
+    }
 }
 
 /// Sample random Float numbers from unifrom distribution [0, 1).
 ///
 /// Slightly faster than `xorshift_uniform(buffer, low: 0, high: 1)`.
 public func xorshift_uniform(_ buffer: UnsafeMutableBufferPointer<Float>) {
-    xorshift_uniform(start: buffer.baseAddress!, count: buffer.count)
+    buffer.baseAddress.map {
+        xorshift_uniform(start: $0, count: buffer.count)
+    }
 }
 
 /// Sample random Float numbers from unifrom distribution [low, high).
@@ -191,7 +171,9 @@ public func xorshift_uniform(start: UnsafeMutablePointer<Float>,
 ///   - `low` < `high`
 public func xorshift_uniform(low: Double = 0,
                              high: Double = 1) -> Double {
-    return xorshift_uniform_generic(low: low, high: high)
+    var ret: Double = 0
+    xorshift_uniform_generic(start: &ret, count: 1, low: low, high: high)
+    return ret
 }
 
 /// Sample random Double numbers from unifrom distribution [low, high).
@@ -201,7 +183,11 @@ public func xorshift_uniform(low: Double = 0,
 public func xorshift_uniform(count: Int,
                              low: Double = 0,
                              high: Double = 1) -> [Double] {
-    return xorshift_uniform_generic(count: count, low: low, high: high)
+    var ret = [Double](repeating: 0,  count: count)
+    ret.withUnsafeMutableBufferPointer {
+        xorshift_uniform_generic(start: $0.baseAddress!, count: $0.count, low: low, high: high)
+    }
+    return ret
 }
 
 /// Sample random Double numbers from unifrom distribution [low, high).
@@ -210,7 +196,9 @@ public func xorshift_uniform(count: Int,
 public func xorshift_uniform(_ buffer: UnsafeMutableBufferPointer<Double>,
                              low: Double = 0,
                              high: Double = 1) {
-    xorshift_uniform_generic(buffer, low: low, high: high)
+    buffer.baseAddress.map {
+        xorshift_uniform_generic(start: $0, count: buffer.count, low: low, high: high)
+    }
 }
 
 /// Sample random Double numbers from unifrom distribution [low, high).
