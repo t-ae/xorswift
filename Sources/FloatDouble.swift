@@ -1,18 +1,8 @@
 import Foundation
+
 #if canImport(Accelerate)
 import Accelerate
 #endif
-
-func nextafter<T: FloatingPoint>(_ lhs: T, _ rhs: T) -> T {
-    switch(T.self) {
-    case is Float.Type:
-        return nextafterf(lhs as! Float, rhs as! Float) as! T
-    case is Double.Type:
-        return nextafter(lhs as! Double, rhs as! Double) as! T
-    default:
-        fatalError("Unsupported type: \(T.self)")
-    }
-}
 
 protocol FloatDouble: FloatingPoint {
     static func sin(_ arg: Self) -> Self
@@ -21,7 +11,7 @@ protocol FloatDouble: FloatingPoint {
     static func nextafter(_ lhs: Self, _ rhs: Self) -> Self
     
     #if canImport(Accelerate)
-
+    
     static func vsincos(_ sinOut: UnsafeMutablePointer<Self>,
                         _ cosOut: UnsafeMutablePointer<Self>,
                         _ input: UnsafePointer<Self>,
@@ -95,7 +85,9 @@ extension Float: FloatDouble {
         vvsqrtf(output, input, count)
     }
     
-    static func vfltu32(_ input: UnsafePointer<UInt32>, _ output: UnsafeMutablePointer<Float>, _ count: vDSP_Length) {
+    static func vfltu32(_ input: UnsafePointer<UInt32>,
+                        _ output: UnsafeMutablePointer<Float>,
+                        _ count: vDSP_Length) {
         vDSP_vfltu32(input, 1, output, 1, count)
     }
     
@@ -160,7 +152,9 @@ extension Double: FloatDouble {
         vvsqrt(output, input, count)
     }
     
-    static func vfltu32(_ input: UnsafePointer<UInt32>, _ output: UnsafeMutablePointer<Double>, _ count: vDSP_Length) {
+    static func vfltu32(_ input: UnsafePointer<UInt32>,
+                        _ output: UnsafeMutablePointer<Double>,
+                        _ count: vDSP_Length) {
         vDSP_vfltu32D(input, 1, output, 1, count)
     }
     
