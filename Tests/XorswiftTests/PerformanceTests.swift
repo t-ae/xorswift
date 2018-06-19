@@ -1,6 +1,6 @@
 import XCTest
-#if os(macOS)
-    import Accelerate
+#if canImport(Accelerate)
+import Accelerate
 #endif
 @testable import Xorswift
 
@@ -48,7 +48,7 @@ extension PerformanceTests {
 }
 
 extension PerformanceTests {
-    #if os(macOS)
+    #if canImport(Accelerate)
     func testPerformance_arc4random_uniform() {
         let count = 1_000_000
         var a = [Float](repeating: 0, count: count)
@@ -87,7 +87,7 @@ extension PerformanceTests {
 }
 
 extension PerformanceTests {
-    #if os(macOS)
+    #if canImport(Accelerate)
     func testPerformance_xorshift_normal_accelerate_float() {
         let count = 300_000
         var a = [Float](repeating: 0, count: count)
@@ -111,7 +111,7 @@ extension PerformanceTests {
 }
 
 extension PerformanceTests {
-    #if os(macOS)
+    #if canImport(Accelerate)
     func testPerformance_xorshift_normal_accelerate_double() {
         let count = 300_000
         var a = [Double](repeating: 0, count: count)
