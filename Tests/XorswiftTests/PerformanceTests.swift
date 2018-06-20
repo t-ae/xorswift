@@ -74,16 +74,6 @@ extension PerformanceTests {
             }
         }
     }
-    
-    func testPerformance_xorshift_uniform_01_float() {
-        let count = 1_000_000
-        var a = [Float](repeating: 0, count: count)
-        measure {
-            for _ in 0..<100 {
-                xorshift_uniform(start: &a, count: a.count)
-            }
-        }
-    }
 }
 
 extension PerformanceTests {

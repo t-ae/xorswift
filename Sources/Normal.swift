@@ -197,9 +197,9 @@ public func xorshift_normal(start: UnsafeMutablePointer<Float>,
 ///   - `count` >= 0
 ///   - `sigma` >= 0
 public func xorshift_normal_no_accelerate(start: UnsafeMutablePointer<Float>,
-                             count: Int,
-                             mu: Float = 0,
-                             sigma: Float = 1) {
+                                          count: Int,
+                                          mu: Float = 0,
+                                          sigma: Float = 1) {
     xorshift_normal_no_accelerate_generic(start: start, count: count, mu: mu, sigma: sigma)
 }
 
