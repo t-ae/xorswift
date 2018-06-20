@@ -3,7 +3,6 @@ import Foundation
 @testable import Xorswift
 
 class XorswiftTests: XCTestCase {
-    
     func testXorshift() {
         do {
             let count = 0
