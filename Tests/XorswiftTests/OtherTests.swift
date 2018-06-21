@@ -1,7 +1,7 @@
 
 import XCTest
 
-class RangeTests: XCTestCase {
+class OtherTests: XCTestCase {
 
     func testRanges() {
         do {
