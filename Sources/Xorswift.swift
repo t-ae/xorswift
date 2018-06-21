@@ -48,7 +48,7 @@ public func xorshift(start: UnsafeMutablePointer<UInt32>, count: Int) {
     
     var xp = p - 4
     var wp = p - 1
-    for _ in 0..<max(0, count-4) {
+    for _ in 0..<count-4 {
         let t = xp.pointee ^ (xp.pointee << 11)
         p.pointee = (wp.pointee ^ (wp.pointee >> 19)) ^ (t ^ (t >> 8))
         
