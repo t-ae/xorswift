@@ -144,22 +144,20 @@ func xorshift_normal_no_accelerate_generic<T: FloatDouble>(start: UnsafeMutableP
 /// - Precondition:
 ///   - `sigma` >= 0
 public func xorshift_normal(mu: Float = 0, sigma: Float = 1) -> Float {
-    precondition(sigma >= 0, "Invalid argument: `sigma` must not be less than 0.")
-    
     var ret: Float = 0
     xorshift_normal_no_accelerate(start: &ret, count: 1, mu: mu, sigma: sigma)
     return ret
 }
 
 /// Sample random numbers from normal distribution N(mu, sigma).
-/// Using Accelerate framework.
+///
+/// Use Accelerate framework if available.
 /// - Precondition:
 ///   - `count` >= 0
 ///   - `sigma` >= 0
 public func xorshift_normal(count: Int,
                             mu: Float = 0,
                             sigma: Float = 1) -> [Float] {
-    precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
     var ret = [Float](repeating: 0,  count: count)
     ret.withUnsafeMutableBufferPointer {
         xorshift_normal($0, mu: mu, sigma: sigma)
@@ -168,7 +166,21 @@ public func xorshift_normal(count: Int,
 }
 
 /// Sample random numbers from normal distribution N(mu, sigma).
-/// Using Accelerate framework.
+///
+/// Use Accelerate framework if available.
+/// - Precondition:
+///   - `sigma` >= 0
+public func xorshift_normal(_ array: inout [Float],
+                            mu: Float = 0,
+                            sigma: Float = 1) {
+    array.withUnsafeMutableBufferPointer {
+        xorshift_normal($0, mu: mu, sigma: sigma)
+    }
+}
+
+/// Sample random numbers from normal distribution N(mu, sigma).
+///
+/// Use Accelerate framework if available.
 /// - Precondition:
 ///   - `sigma` >= 0
 public func xorshift_normal(_ buffer: UnsafeMutableBufferPointer<Float>,
@@ -180,6 +192,8 @@ public func xorshift_normal(_ buffer: UnsafeMutableBufferPointer<Float>,
 }
 
 /// Generate random numbers from normal distribution N(mu, sigma).
+///
+/// Use Accelerate framework if available.
 /// - Precondition:
 ///   - `count` >= 0
 ///   - `sigma` >= 0
@@ -210,22 +224,20 @@ public func xorshift_normal_no_accelerate(start: UnsafeMutablePointer<Float>,
 /// - Precondition:
 ///   - `sigma` >= 0
 public func xorshift_normal(mu: Double = 0, sigma: Double = 1) -> Double {
-    precondition(sigma >= 0, "Invalid argument: `sigma` must not be less than 0.")
-    
     var ret: Double = 0
     xorshift_normal_no_accelerate(start: &ret, count: 1, mu: mu, sigma: sigma)
     return ret
 }
 
 /// Sample random numbers from normal distribution N(mu, sigma).
-/// Using Accelerate framework.
+///
+/// Use Accelerate framework if available.
 /// - Precondition:
 ///   - `count` >= 0
 ///   - `sigma` >= 0
 public func xorshift_normal(count: Int,
                             mu: Double = 0,
                             sigma: Double = 1) -> [Double] {
-    precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
     var ret = [Double](repeating: 0,  count: count)
     ret.withUnsafeMutableBufferPointer {
         xorshift_normal($0, mu: mu, sigma: sigma)
@@ -234,7 +246,21 @@ public func xorshift_normal(count: Int,
 }
 
 /// Sample random numbers from normal distribution N(mu, sigma).
-/// Using Accelerate framework.
+///
+/// Use Accelerate framework if available.
+/// - Precondition:
+///   - `sigma` >= 0
+public func xorshift_normal(_ array: inout [Double],
+                            mu: Double = 0,
+                            sigma: Double = 1) {
+    array.withUnsafeMutableBufferPointer {
+        xorshift_normal($0, mu: mu, sigma: sigma)
+    }
+}
+
+/// Sample random numbers from normal distribution N(mu, sigma).
+///
+/// Use Accelerate framework if available.
 /// - Precondition:
 ///   - `sigma` >= 0
 public func xorshift_normal(_ buffer: UnsafeMutableBufferPointer<Double>,
@@ -246,6 +272,8 @@ public func xorshift_normal(_ buffer: UnsafeMutableBufferPointer<Double>,
 }
 
 /// Generate random numbers from normal distribution N(mu, sigma).
+///
+/// Use Accelerate framework if available.
 /// - Precondition:
 ///   - `count` >= 0
 ///   - `sigma` >= 0
