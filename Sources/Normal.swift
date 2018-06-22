@@ -1,3 +1,5 @@
+import Foundation
+
 // MARK: - General
 
 func xorshift_normal_generic<T: FloatDouble>(mu: T,
@@ -61,11 +63,11 @@ func xorshift_normal_generic<T: FloatDouble>(start: UnsafeMutablePointer<T>,
 /// - Precondition:
 ///   - `count` >= 0
 ///   - `sigma` >= 0
-public func xorshift_normal_generic(start: UnsafeMutablePointer<Float>,
-                                    count: Int,
-                                    mu: Float,
-                                    sigma: Float) {
-    xorshift_normal_no_accelerate_generic(start: start, count: Int32(count), mu: mu, sigma: sigma)
+func xorshift_normal_generic<T: FloatDouble>(start: UnsafeMutablePointer<T>,
+                                             count: Int,
+                                             mu: T,
+                                             sigma: T) {
+    xorshift_normal_no_accelerate_generic(start: start, count: count, mu: mu, sigma: sigma)
 }
 
 #endif
