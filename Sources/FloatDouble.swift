@@ -25,16 +25,6 @@ protocol FloatDouble: FloatingPoint {
                       _ input: UnsafePointer<Self>,
                       _ count: UnsafePointer<Int32>)
     
-    static func vfltu32(_ input: UnsafePointer<UInt32>,
-                        _ output: UnsafeMutablePointer<Self>,
-                        _ count: vDSP_Length)
-    
-    static func vsmsa(_ input: UnsafePointer<Self>,
-                      _ multiplier: UnsafePointer<Self>,
-                      _ adder: UnsafePointer<Self>,
-                      _ output: UnsafeMutablePointer<Self>,
-                      _ count: vDSP_Length)
-    
     static func vmsa(_ input: UnsafePointer<Self>,
                      _ multiplier: UnsafePointer<Self>,
                      _ adder: UnsafePointer<Self>,
@@ -90,20 +80,6 @@ extension Float: FloatDouble {
                       _ input: UnsafePointer<Float>,
                       _ count: UnsafePointer<Int32>) {
         vvsqrtf(output, input, count)
-    }
-    
-    static func vfltu32(_ input: UnsafePointer<UInt32>,
-                        _ output: UnsafeMutablePointer<Float>,
-                        _ count: vDSP_Length) {
-        vDSP_vfltu32(input, 1, output, 1, count)
-    }
-    
-    static func vsmsa(_ input: UnsafePointer<Float>,
-                      _ multiplier: UnsafePointer<Float>,
-                      _ adder: UnsafePointer<Float>,
-                      _ output: UnsafeMutablePointer<Float>,
-                      _ count: vDSP_Length) {
-        vDSP_vsmsa(input, 1, multiplier, adder, output, 1, count)
     }
     
     static func vmsa(_ input: UnsafePointer<Float>,
@@ -199,20 +175,6 @@ extension Double: FloatDouble {
                       _ input: UnsafePointer<Double>,
                       _ count: UnsafePointer<Int32>) {
         vvsqrt(output, input, count)
-    }
-    
-    static func vfltu32(_ input: UnsafePointer<UInt32>,
-                        _ output: UnsafeMutablePointer<Double>,
-                        _ count: vDSP_Length) {
-        vDSP_vfltu32D(input, 1, output, 1, count)
-    }
-    
-    static func vsmsa(_ input: UnsafePointer<Double>,
-                      _ multiplier: UnsafePointer<Double>,
-                      _ adder: UnsafePointer<Double>,
-                      _ output: UnsafeMutablePointer<Double>,
-                      _ count: vDSP_Length) {
-        vDSP_vsmsaD(input, 1, multiplier, adder, output, 1, count)
     }
     
     static func vmsa(_ input: UnsafePointer<Double>,
