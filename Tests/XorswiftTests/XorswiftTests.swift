@@ -7,7 +7,6 @@ class XorswiftTests: XCTestCase {
         do {
             let count = 0
             var a = [UInt32](repeating: 0, count: count)
-            
             xorshift(start: &a, count: count)
             
             XCTAssertEqual(a, [])
@@ -25,7 +24,7 @@ class XorswiftTests: XCTestCase {
     func testXorshift_uniform_float() {
         typealias T = Float
         do {
-            let count = 1_000_000
+            let count = 1_000_001
             var a = [T](repeating: 0, count: count)
             
             xorshift_uniform(start: &a, count: count)
@@ -36,7 +35,7 @@ class XorswiftTests: XCTestCase {
             XCTAssertLessThan(a.max()!, 1)
         }
         do {
-            let count = 1_000_000
+            let count = 1_000_002
             var a = [T](repeating: 0, count: count)
             
             xorshift_uniform(start: &a, count: count, low: 1, high: 2)
@@ -47,7 +46,7 @@ class XorswiftTests: XCTestCase {
             XCTAssertLessThan(a.max()!, 2)
         }
         do {
-            let count = 1_000_002
+            let count = 1_000_003
             
             let a: [T] = xorshift_uniform(count: count, low: 1, high: 2)
             let mean = a.reduce(0, +) / T(a.count)
@@ -69,7 +68,7 @@ class XorswiftTests: XCTestCase {
     func testXorshift_uniform_double() {
         typealias T = Double
         do {
-            let count = 1_000_000
+            let count = 1_000_001
             var a = [T](repeating: 0, count: count)
             
             xorshift_uniform(start: &a, count: count)
@@ -80,7 +79,7 @@ class XorswiftTests: XCTestCase {
             XCTAssertLessThan(a.max()!, 1)
         }
         do {
-            let count = 1_000_000
+            let count = 1_000_001
             var a = [T](repeating: 0, count: count)
             
             xorshift_uniform(start: &a, count: count, low: 1, high: 2)
@@ -91,7 +90,7 @@ class XorswiftTests: XCTestCase {
             XCTAssertLessThan(a.max()!, 2)
         }
         do {
-            let count = 1_000_002
+            let count = 1_000_001
             
             let a: [T] = xorshift_uniform(count: count, low: 1, high: 2)
             let mean = a.reduce(0, +) / T(a.count)

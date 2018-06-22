@@ -19,6 +19,13 @@ public func xorshift(count: Int) -> [UInt32] {
     return ret
 }
 
+/// Fill array with random UInt32 numbers.
+public func xorshift(_ array: inout [UInt32]) {
+    array.withUnsafeMutableBufferPointer {
+        xorshift($0)
+    }
+}
+
 /// Generate random UInt32 numbers.
 public func xorshift(_ buffer: UnsafeMutableBufferPointer<UInt32>) {
     buffer.baseAddress.map {
