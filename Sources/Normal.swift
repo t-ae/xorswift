@@ -1,14 +1,19 @@
 // MARK: - General
 
+func xorshift_normal_generic<T: FloatDouble>(mu: T,
+                                             sigma: T) -> T {
+    precondition(sigma >= 0, "Invalid argument: `sigma` must not be less than 0.")
+    
+    let r = T.random12(multiplier: -1, adder: 2)
+    let t = T.random12(multiplier: 2*T.pi, adder: 0)
+    
+    return sigma*sqrt(-2*T.log(r))*T.sin(t) + mu
+}
+
 #if canImport(Accelerate)
 
 import Accelerate
 
-/// Sample random numbers from normal distribution N(mu, sigma).
-/// Using Accelerate framework.
-/// - Precondition:
-///   - `count` >= 0
-///   - `sigma` >= 0
 func xorshift_normal_generic<T: FloatDouble>(start: UnsafeMutablePointer<T>,
                                              count: Int,
                                              mu: T,
@@ -111,9 +116,7 @@ func xorshift_normal_no_accelerate_generic<T: FloatDouble>(start: UnsafeMutableP
 /// - Precondition:
 ///   - `sigma` >= 0
 public func xorshift_normal(mu: Float = 0, sigma: Float = 1) -> Float {
-    var ret: Float = 0
-    xorshift_normal_no_accelerate(start: &ret, count: 1, mu: mu, sigma: sigma)
-    return ret
+    return xorshift_normal_generic(mu: mu, sigma: sigma)
 }
 
 /// Sample random numbers from normal distribution N(mu, sigma).
@@ -191,9 +194,7 @@ public func xorshift_normal_no_accelerate(start: UnsafeMutablePointer<Float>,
 /// - Precondition:
 ///   - `sigma` >= 0
 public func xorshift_normal(mu: Double = 0, sigma: Double = 1) -> Double {
-    var ret: Double = 0
-    xorshift_normal_no_accelerate(start: &ret, count: 1, mu: mu, sigma: sigma)
-    return ret
+    return xorshift_normal_generic(mu: mu, sigma: sigma)
 }
 
 /// Sample random numbers from normal distribution N(mu, sigma).

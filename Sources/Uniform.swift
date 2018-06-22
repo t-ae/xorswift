@@ -2,6 +2,12 @@ import Foundation
 
 // MARK: - Generic
 
+func xorshift_uniform_generic<T: FloatDouble>(low: T,
+                                              high: T) -> T {
+    precondition(low < high, "Invalid argument: must be `low` < `high`")
+    return T.random12(multiplier: high - low, adder: low*2 - high)
+}
+
 func xorshift_uniform_generic<T: FloatDouble>(start: UnsafeMutablePointer<T>,
                                               count: Int,
                                               low: T,
@@ -20,9 +26,7 @@ func xorshift_uniform_generic<T: FloatDouble>(start: UnsafeMutablePointer<T>,
 ///   - `low` < `high`
 public func xorshift_uniform(low: Float = 0,
                              high: Float = 1) -> Float {
-    var ret: Float = 0
-    xorshift_uniform(start: &ret, count: 1, low: low, high: high)
-    return ret
+    return xorshift_uniform_generic(low: low, high: high)
 }
 
 /// Sample random Float numbers from unifrom distribution [low, high).
@@ -80,9 +84,7 @@ public func xorshift_uniform(start: UnsafeMutablePointer<Float>,
 ///   - `low` < `high`
 public func xorshift_uniform(low: Double = 0,
                              high: Double = 1) -> Double {
-    var ret: Double = 0
-    xorshift_uniform(start: &ret, count: 1, low: low, high: high)
-    return ret
+    return xorshift_uniform_generic(low: low, high: high)
 }
 
 /// Sample random Double numbers from unifrom distribution [low, high).

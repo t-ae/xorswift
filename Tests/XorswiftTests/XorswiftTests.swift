@@ -1,6 +1,6 @@
 import XCTest
 import Foundation
-@testable import Xorswift
+import Xorswift
 
 class XorswiftTests: XCTestCase {
     func testXorshift() {
@@ -18,6 +18,34 @@ class XorswiftTests: XCTestCase {
             xorshift(start: &a, count: count)
             
             XCTAssertEqual(a.count, 1)
+        }
+    }
+    
+    func testXorshift_uniform_float_single() {
+        typealias T = Float
+        do {
+            let count = 1_000_001
+            let a: [T] = (0..<count).map { _ in xorshift_uniform() }
+            
+            let mean = a.reduce(0, +) / T(a.count)
+            
+            XCTAssertEqual(mean, 0.5, accuracy: 1e-3)
+            XCTAssertGreaterThanOrEqual(a.min()!, 0)
+            XCTAssertLessThan(a.max()!, 1)
+        }
+    }
+    
+    func testXorshift_uniform_double_single() {
+        typealias T = Double
+        do {
+            let count = 1_000_001
+            let a: [T] = (0..<count).map { _ in xorshift_uniform() }
+            
+            let mean = a.reduce(0, +) / T(a.count)
+            
+            XCTAssertEqual(mean, 0.5, accuracy: 1e-3)
+            XCTAssertGreaterThanOrEqual(a.min()!, 0)
+            XCTAssertLessThan(a.max()!, 1)
         }
     }
     
@@ -80,6 +108,16 @@ class XorswiftTests: XCTestCase {
         }
         do {
             let count = 1_000_001
+            let a: [T] = (0..<count).map { _ in xorshift_uniform() }
+            
+            let mean = a.reduce(0, +) / T(a.count)
+            
+            XCTAssertEqual(mean, 0.5, accuracy: 1e-3)
+            XCTAssertGreaterThanOrEqual(a.min()!, 0)
+            XCTAssertLessThan(a.max()!, 1)
+        }
+        do {
+            let count = 1_000_001
             var a = [T](repeating: 0, count: count)
             
             xorshift_uniform(start: &a, count: count, low: 1, high: 2)
@@ -106,6 +144,36 @@ class XorswiftTests: XCTestCase {
             xorshift_uniform(start: &a, count: count, low: -1, high: 1)
             
             XCTAssertEqual(a, [])
+        }
+    }
+    
+    func testXorshift_normal_float_single() {
+        typealias T = Float
+        do {
+            let count = 1_000_001
+            let a: [T] = (0..<count).map { _ in xorshift_normal() }
+            
+            let mean = a.reduce(0, +) / T(a.count)
+            let mean2: T = a.map { $0*$0 }.reduce(0, +) / T(a.count)
+            let variance = mean2 - mean*mean
+            
+            XCTAssertEqual(mean, 0, accuracy: 1e-2)
+            XCTAssertEqual(variance, 1, accuracy: 1e-2)
+        }
+    }
+    
+    func testXorshift_normal_double_single() {
+        typealias T = Double
+        do {
+            let count = 1_000_001
+            let a: [T] = (0..<count).map { _ in xorshift_normal() }
+            
+            let mean = a.reduce(0, +) / T(a.count)
+            let mean2: T = a.map { $0*$0 }.reduce(0, +) / T(a.count)
+            let variance = mean2 - mean*mean
+            
+            XCTAssertEqual(mean, 0, accuracy: 1e-2)
+            XCTAssertEqual(variance, 1, accuracy: 1e-2)
         }
     }
     
