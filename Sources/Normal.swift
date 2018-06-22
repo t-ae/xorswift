@@ -25,24 +25,12 @@ func xorshift_normal_generic<T: FloatDouble>(start: UnsafeMutablePointer<T>,
     // First half: sigma*sqrt(-2log(X))*sin(Y) + mu
     // Last half: sigma*sqrt(-2log(X))*cos(Y) + mu
     
-    var buf1 = [UInt32](repeating: 0, count: half)
-    xorshift(start: &buf1, count: half)
-    T.vfltu32(buf1, start, _half)
+    // (0, 1]
+    T.fill12(start: start, count: half, multiplier: -1, adder: 2)
     
-    var buf2 = [T](repeating: 0, count: half*2)
-    xorshift(start: &buf1, count: half)
-    T.vfltu32(buf1, &buf2, _half)
-    
-    var flt_min = T.leastNormalMagnitude
-    let divisor = T.nextafter(T(UInt32.max), .infinity)
-    
-    // X in (0, 1)
-    var mulX = 1 / divisor
-    T.vsmsa(start, &mulX, &flt_min, start, _half)
-    
-    // Y in (0, 2pi)
-    var mulY = 2*T.pi / divisor
-    T.vsmsa(buf2, &mulY, &flt_min, &buf2, _half)
+    var sincosbuf = [T](repeating: 0, count: half*2)
+    // [2pi, 4pi) (identical to [0, 2pi) in sin/cos)
+    T.fill12(start: &sincosbuf, count: half, multiplier: 2*T.pi, adder: 0)
     
     // sigma*sqrt(-2*log(X))
     T.vlog(start, start, &__half)
@@ -53,13 +41,13 @@ func xorshift_normal_generic<T: FloatDouble>(start: UnsafeMutablePointer<T>,
     memcpy(start+half, start, (count - half) * MemoryLayout<T>.size)
     
     // sincos(Y)
-    buf2.withUnsafeMutableBufferPointer {
+    sincosbuf.withUnsafeMutableBufferPointer {
         let p = $0.baseAddress!
         T.vsincos(p, p+half, p, &__half)
     }
     
     var mu = mu
-    T.vmsa(start, buf2, &mu, start, _count)
+    T.vmsa(start, sincosbuf, &mu, start, _count)
 }
 
 #else
