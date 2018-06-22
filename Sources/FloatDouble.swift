@@ -48,6 +48,11 @@ protocol FloatDouble: FloatingPoint {
     
     #endif
     
+    static func fill12(start: UnsafeMutablePointer<Self>,
+                       count: Int,
+                       multiplier: Self,
+                       adder: Self)
+    
 }
 
 extension Float: FloatDouble {
@@ -115,6 +120,41 @@ extension Float: FloatDouble {
     }
     
     #endif
+    
+    static func fill12(start: UnsafeMutablePointer<Float>,
+                       count: Int,
+                       multiplier: Float,
+                       adder: Float) {
+        
+        var p = start
+        
+        for _ in 0..<count%4 {
+            let t = x ^ (x << 11)
+            x = y; y = z; z = w;
+            w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))
+            p.pointee = Float(bitPattern: w>>9 | 0x3f80_0000) * multiplier + adder
+            p += 1
+        }
+        
+        for _ in 0..<count/4 {
+            let t1 = x ^ (x << 11)
+            let t2 = y ^ (y << 11)
+            let t3 = z ^ (z << 11)
+            let t4 = w ^ (w << 11)
+            x = (w ^ (w >> 19)) ^ (t1 ^ (t1 >> 8))
+            y = (x ^ (x >> 19)) ^ (t2 ^ (t2 >> 8))
+            z = (y ^ (y >> 19)) ^ (t3 ^ (t3 >> 8))
+            w = (z ^ (z >> 19)) ^ (t4 ^ (t4 >> 8))
+            p.pointee = Float(bitPattern: x>>9 | 0x3f80_0000) * multiplier + adder
+            p += 1
+            p.pointee = Float(bitPattern: y>>9 | 0x3f80_0000) * multiplier + adder
+            p += 1
+            p.pointee = Float(bitPattern: z>>9 | 0x3f80_0000) * multiplier + adder
+            p += 1
+            p.pointee = Float(bitPattern: w>>9 | 0x3f80_0000) * multiplier + adder
+            p += 1
+        }
+    }
 }
 
 extension Double: FloatDouble {
@@ -182,7 +222,38 @@ extension Double: FloatDouble {
     }
     
     #endif
+    
+    static func fill12(start: UnsafeMutablePointer<Double>,
+                       count: Int,
+                       multiplier: Double,
+                       adder: Double) {
+        var p = start
+        
+        if count%2 != 0 {
+            let t1 = x ^ (x << 11)
+            let t2 = y ^ (y << 11)
+            x = z; y = w;
+            z = (x ^ (x >> 19)) ^ (t1 ^ (t1 >> 8))
+            w = (y ^ (y >> 19)) ^ (t2 ^ (t2 >> 8))
+            p.pointee = Double(bitPattern: UInt64(z<<12)<<20 | UInt64(w) | 0x3ff0_0000_0000_0000) * multiplier + adder
+            p += 1
+        }
+        
+        for _ in 0..<count/2 {
+            let t1 = x ^ (x << 11)
+            let t2 = y ^ (y << 11)
+            let t3 = z ^ (z << 11)
+            let t4 = w ^ (w << 11)
+            x = (w ^ (w >> 19)) ^ (t1 ^ (t1 >> 8))
+            y = (x ^ (x >> 19)) ^ (t2 ^ (t2 >> 8))
+            z = (y ^ (y >> 19)) ^ (t3 ^ (t3 >> 8))
+            w = (z ^ (z >> 19)) ^ (t4 ^ (t4 >> 8))
+            p.pointee = Double(bitPattern: UInt64(x<<12)<<20 | UInt64(y) | 0x3ff0_0000_0000_0000) * multiplier + adder
+            p += 1
+            p.pointee = Double(bitPattern: UInt64(z<<12)<<20 | UInt64(w) | 0x3ff0_0000_0000_0000) * multiplier + adder
+            p += 1
+        }
+    }
 }
-
 
 
