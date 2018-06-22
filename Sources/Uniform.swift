@@ -44,7 +44,6 @@ func xorshift_uniform_generic<T: FloatDouble>(start: UnsafeMutablePointer<T>,
     }
 }
 
-
 // MARK: - Float
 
 /// Sample random Float number from unifrom distribution [low, high).
@@ -90,7 +89,38 @@ public func xorshift_uniform(start: UnsafeMutablePointer<Float>,
                              count: Int,
                              low: Float = 0,
                              high: Float = 1) {
-    xorshift_uniform_generic(start: start, count: count, low: low, high: high)
+    precondition(low < high, "Invalid argument: must be `low` < `high`")
+    precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
+    
+    var p = start
+    let multiplier = (high-low) / Float(1<<23)
+    
+    for _ in 0..<count%4 {
+        let t = x ^ (x << 11)
+        x = y; y = z; z = w;
+        w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))
+        p.pointee = Float(w>>9) * multiplier + low
+        p += 1
+    }
+    
+    for _ in 0..<count/4 {
+        let t1 = x ^ (x << 11)
+        let t2 = y ^ (y << 11)
+        let t3 = z ^ (z << 11)
+        let t4 = w ^ (w << 11)
+        x = (w ^ (w >> 19)) ^ (t1 ^ (t1 >> 8))
+        y = (x ^ (x >> 19)) ^ (t2 ^ (t2 >> 8))
+        z = (y ^ (y >> 19)) ^ (t3 ^ (t3 >> 8))
+        w = (z ^ (z >> 19)) ^ (t4 ^ (t4 >> 8))
+        p.pointee = Float(x>>9) * multiplier + low
+        p += 1
+        p.pointee = Float(y>>9) * multiplier + low
+        p += 1
+        p.pointee = Float(z>>9) * multiplier + low
+        p += 1
+        p.pointee = Float(w>>9) * multiplier + low
+        p += 1
+    }
 }
 
 

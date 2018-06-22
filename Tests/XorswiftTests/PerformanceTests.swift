@@ -74,6 +74,16 @@ extension PerformanceTests {
             }
         }
     }
+    
+    func testPerformance_xorshift_uniform_double() {
+        let count = 1_000_000
+        var a = [Double](repeating: 0, count: count)
+        measure {
+            for _ in 0..<100 {
+                xorshift_uniform(start: &a, count: a.count, low: 0, high: 1)
+            }
+        }
+    }
 }
 
 extension PerformanceTests {
