@@ -57,7 +57,7 @@ func xorshift_normal_generic<T: FloatDouble>(start: UnsafeMutablePointer<T>,
 
 #else
 
-/// Generate random numbers from normal distribution N(mu, sigma).
+/// Sample random numbers from normal distribution N(mu, sigma).
 /// - Precondition:
 ///   - `count` >= 0
 ///   - `sigma` >= 0
@@ -161,7 +161,7 @@ public func xorshift_normal(_ buffer: UnsafeMutableBufferPointer<Float>,
     }
 }
 
-/// Generate random numbers from normal distribution N(mu, sigma).
+/// Sample random numbers from normal distribution N(mu, sigma).
 ///
 /// Use Accelerate framework if available.
 /// - Precondition:
@@ -239,7 +239,7 @@ public func xorshift_normal(_ buffer: UnsafeMutableBufferPointer<Double>,
     }
 }
 
-/// Generate random numbers from normal distribution N(mu, sigma).
+/// Sample random numbers from normal distribution N(mu, sigma).
 ///
 /// Use Accelerate framework if available.
 /// - Precondition:

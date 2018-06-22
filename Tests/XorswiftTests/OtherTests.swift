@@ -1,5 +1,5 @@
-
 import XCTest
+import Accelerate
 
 class OtherTests: XCTestCase {
     func testDoubleMake() {

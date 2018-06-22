@@ -8,7 +8,6 @@ protocol FloatDouble: FloatingPoint {
     static func sin(_ arg: Self) -> Self
     static func cos(_ arg: Self) -> Self
     static func log(_ arg: Self) -> Self
-    static func nextafter(_ lhs: Self, _ rhs: Self) -> Self
     
     #if canImport(Accelerate)
     
@@ -56,9 +55,6 @@ extension Float: FloatDouble {
     }
     static func log(_ arg: Float) -> Float {
         return Foundation.log(arg)
-    }
-    static func nextafter(_ lhs: Float, _ rhs: Float) -> Float {
-        return Foundation.nextafter(lhs, rhs)
     }
     
     #if canImport(Accelerate)
@@ -151,9 +147,6 @@ extension Double: FloatDouble {
     }
     static func log(_ arg: Double) -> Double {
         return Foundation.log(arg)
-    }
-    static func nextafter(_ lhs: Double, _ rhs: Double) -> Double {
-        return Foundation.nextafter(lhs, rhs)
     }
     
     #if canImport(Accelerate)
