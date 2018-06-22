@@ -78,50 +78,29 @@ func xorshift_normal_no_accelerate_generic<T: FloatDouble>(start: UnsafeMutableP
     precondition(sigma >= 0, "Invalid argument: `sigma` must not be less than 0.")
     precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
     
-    var p = start
-    let divisor = T.nextafter(T(UInt32.max), .infinity)
+    let minus2sigma2 = -2*sigma*sigma
+    let half = (count+1)/2
     
-    for _ in 0..<count%4 {
-        var t: UInt32
-        t = x ^ (x << 11)
-        x = y; y = z; z = w;
-        w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))
-        let x1 = T(w) / divisor + T.leastNormalMagnitude
-        
-        t = x ^ (x << 11)
-        x = y; y = z; z = w;
-        w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))
-        let x2 = T(w) / divisor + T.leastNormalMagnitude
-        
-        p.pointee = sigma*sqrt(-2*T.log(x1))*T.cos(2*T.pi*x2) + mu
-        p += 1
+    // (0, 1]
+    var rp = start
+    T.fill12(start: rp, count: half, multiplier: -1, adder: 2)
+    
+    // [2pi, 4pi) (identical to [0, 2pi) in sin/cos)
+    var tp = start + half
+    T.fill12(start: tp, count: count-half, multiplier: 2*T.pi, adder: 0)
+    
+    if count%2 != 0 {
+        let theta = T.random12(multiplier: 2*T.pi, adder: 0)
+        rp.pointee = sqrt(minus2sigma2*T.log(rp.pointee))*T.sin(theta) + mu
+        rp += 1
     }
-    
-    for _ in 0..<count/4 {
-        var x1, x2: T
-        let t1 = x ^ (x << 11)
-        let t2 = y ^ (y << 11)
-        let t3 = z ^ (z << 11)
-        let t4 = w ^ (w << 11)
-        x = (w ^ (w >> 19)) ^ (t1 ^ (t1 >> 8))
-        y = (x ^ (x >> 19)) ^ (t2 ^ (t2 >> 8))
-        z = (y ^ (y >> 19)) ^ (t3 ^ (t3 >> 8))
-        w = (z ^ (z >> 19)) ^ (t4 ^ (t4 >> 8))
-        
-        
-        x1 = T(x) / divisor + T.leastNormalMagnitude
-        x2 = T(y) / divisor + T.leastNormalMagnitude
-        p.pointee = sigma*sqrt(-2*T.log(x1))*T.sin(2*T.pi*x2) + mu
-        p += 1
-        p.pointee = sigma*sqrt(-2*T.log(x1))*T.cos(2*T.pi*x2) + mu
-        p += 1
-        
-        x1 = T(z) / divisor + T.leastNormalMagnitude
-        x2 = T(w) / divisor + T.leastNormalMagnitude
-        p.pointee = sigma*sqrt(-2*T.log(x1))*T.sin(2*T.pi*x2) + mu
-        p += 1
-        p.pointee = sigma*sqrt(-2*T.log(x1))*T.cos(2*T.pi*x2) + mu
-        p += 1
+    for _ in 0..<(count-half) {
+        let r = sqrt(minus2sigma2*T.log(rp.pointee))
+        let t = tp.pointee
+        rp.pointee = r * T.sin(t) + mu
+        tp.pointee = r * T.cos(t) + mu
+        rp += 1
+        tp += 1
     }
 }
 

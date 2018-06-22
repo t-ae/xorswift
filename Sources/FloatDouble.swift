@@ -48,6 +48,8 @@ protocol FloatDouble: FloatingPoint {
     
     #endif
     
+    static func random12(multiplier: Self, adder: Self) -> Self
+    
     static func fill12(start: UnsafeMutablePointer<Self>,
                        count: Int,
                        multiplier: Self,
@@ -120,6 +122,13 @@ extension Float: FloatDouble {
     }
     
     #endif
+    
+    static func random12(multiplier: Float, adder: Float) -> Float {
+        let t = x ^ (x << 11)
+        x = y; y = z; z = w;
+        w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))
+        return Float(bitPattern: w>>9 | 0x3f80_0000) * multiplier + adder
+    }
     
     static func fill12(start: UnsafeMutablePointer<Float>,
                        count: Int,
@@ -222,6 +231,15 @@ extension Double: FloatDouble {
     }
     
     #endif
+    
+    static func random12(multiplier: Double, adder: Double) -> Double {
+        let t1 = x ^ (x << 11)
+        let t2 = y ^ (y << 11)
+        x = z; y = w;
+        z = (x ^ (x >> 19)) ^ (t1 ^ (t1 >> 8))
+        w = (y ^ (y >> 19)) ^ (t2 ^ (t2 >> 8))
+        return Double(bitPattern: UInt64(z<<12)<<20 | UInt64(w) | 0x3ff0_0000_0000_0000) * multiplier + adder
+    }
     
     static func fill12(start: UnsafeMutablePointer<Double>,
                        count: Int,
