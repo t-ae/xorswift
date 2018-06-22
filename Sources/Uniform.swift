@@ -93,13 +93,14 @@ public func xorshift_uniform(start: UnsafeMutablePointer<Float>,
     precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
     
     var p = start
-    let multiplier = (high-low) / Float(1<<23)
+    let multiplier = (high-low)
+    let adder = low*2 - high
     
     for _ in 0..<count%4 {
         let t = x ^ (x << 11)
         x = y; y = z; z = w;
         w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))
-        p.pointee = Float(w>>9) * multiplier + low
+        p.pointee = Float(bitPattern: w>>9 | 0x3f80_0000) * multiplier + adder
         p += 1
     }
     
@@ -112,13 +113,13 @@ public func xorshift_uniform(start: UnsafeMutablePointer<Float>,
         y = (x ^ (x >> 19)) ^ (t2 ^ (t2 >> 8))
         z = (y ^ (y >> 19)) ^ (t3 ^ (t3 >> 8))
         w = (z ^ (z >> 19)) ^ (t4 ^ (t4 >> 8))
-        p.pointee = Float(x>>9) * multiplier + low
+        p.pointee = Float(bitPattern: x>>9 | 0x3f80_0000) * multiplier + adder
         p += 1
-        p.pointee = Float(y>>9) * multiplier + low
+        p.pointee = Float(bitPattern: y>>9 | 0x3f80_0000) * multiplier + adder
         p += 1
-        p.pointee = Float(z>>9) * multiplier + low
+        p.pointee = Float(bitPattern: z>>9 | 0x3f80_0000) * multiplier + adder
         p += 1
-        p.pointee = Float(w>>9) * multiplier + low
+        p.pointee = Float(bitPattern: w>>9 | 0x3f80_0000) * multiplier + adder
         p += 1
     }
 }
@@ -169,5 +170,35 @@ public func xorshift_uniform(start: UnsafeMutablePointer<Double>,
                              count: Int,
                              low: Double = 0,
                              high: Double = 1) {
-    xorshift_uniform_generic(start: start, count: count, low: low, high: high)
+    precondition(low < high, "Invalid argument: must be `low` < `high`")
+    precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
+    
+    var p = start
+    let multiplier = (high-low)
+    let adder = low*2 - high
+    
+    if count%2 != 0 {
+        let t1 = x ^ (x << 11)
+        let t2 = y ^ (y << 11)
+        x = z; y = w;
+        z = (x ^ (x >> 19)) ^ (t1 ^ (t1 >> 8))
+        w = (y ^ (y >> 19)) ^ (t2 ^ (t2 >> 8))
+        p.pointee = Double(bitPattern: UInt64(z<<12)<<20 | UInt64(w) | 0x3ff0_0000_0000_0000) * multiplier + adder
+        p += 1
+    }
+    
+    for _ in 0..<count/2 {
+        let t1 = x ^ (x << 11)
+        let t2 = y ^ (y << 11)
+        let t3 = z ^ (z << 11)
+        let t4 = w ^ (w << 11)
+        x = (w ^ (w >> 19)) ^ (t1 ^ (t1 >> 8))
+        y = (x ^ (x >> 19)) ^ (t2 ^ (t2 >> 8))
+        z = (y ^ (y >> 19)) ^ (t3 ^ (t3 >> 8))
+        w = (z ^ (z >> 19)) ^ (t4 ^ (t4 >> 8))
+        p.pointee = Double(bitPattern: UInt64(x<<12)<<20 | UInt64(y) | 0x3ff0_0000_0000_0000) * multiplier + adder
+        p += 1
+        p.pointee = Double(bitPattern: UInt64(z<<12)<<20 | UInt64(w) | 0x3ff0_0000_0000_0000) * multiplier + adder
+        p += 1
+    }
 }

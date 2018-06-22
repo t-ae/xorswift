@@ -23,5 +23,18 @@ class OtherTests: XCTestCase {
             XCTAssertFalse(log(min).isNaN)
         }
     }
+}
 
+extension OtherTests {
+    func testDoubleMake() {
+        let zero: UInt32 = 0
+        let maxx: UInt32 = UInt32.max
+        let multiplier = 1 / Double(UInt64(1)<<52)
+        
+        let minimum = Double(UInt64(zero<<12)<<20 & UInt64(zero)) * multiplier
+        XCTAssertEqual(minimum, 0)
+        
+        let maximum = Double(UInt64(maxx<<12)<<20 & UInt64(maxx)) * multiplier
+        XCTAssertLessThan(maximum, 1)
+    }
 }
