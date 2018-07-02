@@ -11,6 +11,12 @@ class XorswiftTests: XCTestCase {
             
             XCTAssertEqual(a, [])
         }
+        do {
+            let ub = UInt32(10)
+            let a = (0..<10000).map { _ in XorshiftGenerator.default.next(upperBound: ub) }
+            
+            XCTAssertEqual(Set(a).count, 10)
+        }
     }
     
     func testXorshift_uniform_float_single() {
