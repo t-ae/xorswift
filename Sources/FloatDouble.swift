@@ -37,12 +37,21 @@ protocol FloatDouble: FloatingPoint {
     
     #endif
     
-    static func random12(multiplier: Self, adder: Self) -> Self
+    static func random12(multiplier: Self,
+                         adder: Self,
+                         x: inout UInt32,
+                         y: inout UInt32,
+                         z: inout UInt32,
+                         w: inout UInt32) -> Self
     
     static func fill12(start: UnsafeMutablePointer<Self>,
                        count: Int,
                        multiplier: Self,
-                       adder: Self)
+                       adder: Self,
+                       x: inout UInt32,
+                       y: inout UInt32,
+                       z: inout UInt32,
+                       w: inout UInt32)
     
 }
 
@@ -95,7 +104,12 @@ extension Float: FloatDouble {
     
     #endif
     
-    static func random12(multiplier: Float, adder: Float) -> Float {
+    static func random12(multiplier: Float,
+                         adder: Float,
+                         x: inout UInt32,
+                         y: inout UInt32,
+                         z: inout UInt32,
+                         w: inout UInt32) -> Float {
         let t = x ^ (x << 11)
         x = y; y = z; z = w;
         w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))
@@ -105,7 +119,11 @@ extension Float: FloatDouble {
     static func fill12(start: UnsafeMutablePointer<Float>,
                        count: Int,
                        multiplier: Float,
-                       adder: Float) {
+                       adder: Float,
+                       x: inout UInt32,
+                       y: inout UInt32,
+                       z: inout UInt32,
+                       w: inout UInt32) {
         
         var p = start
         
@@ -187,7 +205,12 @@ extension Double: FloatDouble {
     
     #endif
     
-    static func random12(multiplier: Double, adder: Double) -> Double {
+    static func random12(multiplier: Double,
+                         adder: Double,
+                         x: inout UInt32,
+                         y: inout UInt32,
+                         z: inout UInt32,
+                         w: inout UInt32) -> Double {
         let t1 = x ^ (x << 11)
         let t2 = y ^ (y << 11)
         x = z; y = w;
@@ -199,7 +222,11 @@ extension Double: FloatDouble {
     static func fill12(start: UnsafeMutablePointer<Double>,
                        count: Int,
                        multiplier: Double,
-                       adder: Double) {
+                       adder: Double,
+                       x: inout UInt32,
+                       y: inout UInt32,
+                       z: inout UInt32,
+                       w: inout UInt32) {
         var p = start
         
         if count%2 != 0 {
@@ -228,5 +255,3 @@ extension Double: FloatDouble {
         }
     }
 }
-
-

@@ -21,6 +21,7 @@ public struct XorshiftGenerator: RandomNumberGenerator {
         self.w = w
     }
     
+    /// Generate random UInt32 number.
     public mutating func next() -> UInt32 {
         let t = x ^ (x << 11)
         x = y; y = z; z = w;
@@ -28,6 +29,7 @@ public struct XorshiftGenerator: RandomNumberGenerator {
         return w
     }
     
+    /// Generate random number.
     public mutating func next<T>() -> T where T : FixedWidthInteger, T : UnsignedInteger {
         if T.bitWidth <= 32 {
             let uint32 = next() as UInt32
