@@ -59,7 +59,7 @@ func xorshift_normal_generic<T: FloatDouble>(start: UnsafeMutablePointer<T>,
 
 #else
 
-/// Sample random numbers from normal distribution N(mu, sigma).
+/// Sample random numbers from normal distribution N(mu, sigma^2).
 /// - Precondition:
 ///   - `count` >= 0
 ///   - `sigma` >= 0
@@ -72,7 +72,7 @@ func xorshift_normal_generic<T: FloatDouble>(start: UnsafeMutablePointer<T>,
 
 #endif
 
-/// Sample random numbers from normal distribution N(mu, sigma).
+/// Sample random numbers from normal distribution N(mu, sigma^2).
 ///
 /// - Note: This function is slower than `xorshift_normal` with Accelerate framework, but uses less memories.
 /// - Precondition:
@@ -114,14 +114,14 @@ func xorshift_normal_no_accelerate_generic<T: FloatDouble>(start: UnsafeMutableP
 
 // MARK: - Float
 
-/// Sample random number from normal distribution N(mu, sigma).
+/// Sample random number from normal distribution N(mu, sigma^2).
 /// - Precondition:
 ///   - `sigma` >= 0
 public func xorshift_normal(mu: Float = 0, sigma: Float = 1) -> Float {
     return xorshift_normal_generic(mu: mu, sigma: sigma)
 }
 
-/// Sample random numbers from normal distribution N(mu, sigma).
+/// Sample random numbers from normal distribution N(mu, sigma^2).
 ///
 /// Use Accelerate framework if available.
 /// - Precondition:
@@ -137,7 +137,7 @@ public func xorshift_normal(count: Int,
     return ret
 }
 
-/// Sample random numbers from normal distribution N(mu, sigma).
+/// Sample random numbers from normal distribution N(mu, sigma^2).
 ///
 /// Use Accelerate framework if available.
 /// - Precondition:
@@ -150,7 +150,7 @@ public func xorshift_normal(_ array: inout [Float],
     }
 }
 
-/// Sample random numbers from normal distribution N(mu, sigma).
+/// Sample random numbers from normal distribution N(mu, sigma^2).
 ///
 /// Use Accelerate framework if available.
 /// - Precondition:
@@ -163,7 +163,7 @@ public func xorshift_normal(_ buffer: UnsafeMutableBufferPointer<Float>,
     }
 }
 
-/// Sample random numbers from normal distribution N(mu, sigma).
+/// Sample random numbers from normal distribution N(mu, sigma^2).
 ///
 /// Use Accelerate framework if available.
 /// - Precondition:
@@ -176,7 +176,7 @@ public func xorshift_normal(start: UnsafeMutablePointer<Float>,
     xorshift_normal_generic(start: start, count: count, mu: mu, sigma: sigma)
 }
 
-/// Sample random numbers from normal distribution N(mu, sigma).
+/// Sample random numbers from normal distribution N(mu, sigma^2).
 ///
 /// - Note: This function is slower than `xorshift_normal` with Accelerate framework, but uses less memories.
 /// - Precondition:
@@ -192,14 +192,14 @@ public func xorshift_normal_no_accelerate(start: UnsafeMutablePointer<Float>,
 
 // MARK: - Double
 
-/// Sample random number from normal distribution N(mu, sigma).
+/// Sample random number from normal distribution N(mu, sigma^2).
 /// - Precondition:
 ///   - `sigma` >= 0
 public func xorshift_normal(mu: Double = 0, sigma: Double = 1) -> Double {
     return xorshift_normal_generic(mu: mu, sigma: sigma)
 }
 
-/// Sample random numbers from normal distribution N(mu, sigma).
+/// Sample random numbers from normal distribution N(mu, sigma^2).
 ///
 /// Use Accelerate framework if available.
 /// - Precondition:
@@ -215,7 +215,7 @@ public func xorshift_normal(count: Int,
     return ret
 }
 
-/// Sample random numbers from normal distribution N(mu, sigma).
+/// Sample random numbers from normal distribution N(mu, sigma^2).
 ///
 /// Use Accelerate framework if available.
 /// - Precondition:
@@ -228,7 +228,7 @@ public func xorshift_normal(_ array: inout [Double],
     }
 }
 
-/// Sample random numbers from normal distribution N(mu, sigma).
+/// Sample random numbers from normal distribution N(mu, sigma^2).
 ///
 /// Use Accelerate framework if available.
 /// - Precondition:
@@ -241,7 +241,7 @@ public func xorshift_normal(_ buffer: UnsafeMutableBufferPointer<Double>,
     }
 }
 
-/// Sample random numbers from normal distribution N(mu, sigma).
+/// Sample random numbers from normal distribution N(mu, sigma^2).
 ///
 /// Use Accelerate framework if available.
 /// - Precondition:
@@ -255,7 +255,7 @@ public func xorshift_normal(start: UnsafeMutablePointer<Double>,
 }
 
 
-/// Sample random numbers from normal distribution N(mu, sigma).
+/// Sample random numbers from normal distribution N(mu, sigma^2).
 ///
 /// - Note: This function is slower than `xorshift_normal` with Accelerate framework, but uses less memories.
 /// - Precondition:
