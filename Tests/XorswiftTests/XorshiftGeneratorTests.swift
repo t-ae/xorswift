@@ -21,5 +21,11 @@ class XorshiftGeneratorTests: XCTestCase {
         XCTAssertEqual(gen.uniform.generate(count: 10), gen2.uniform.generate(count: 10) as [Double])
         XCTAssertEqual(gen.normal.generate(count: 10), gen2.normal.generate(count: 10) as [Float])
         XCTAssertEqual(gen.normal.generate(count: 10), gen2.normal.generate(count: 10) as [Double])
+        
+        var a1 = [Float](repeating: 0, count: 10)
+        var a2 = [Float](repeating: 0, count: 10)
+        gen.normal.fill_no_accelerate(start: &a1, count: 10)
+        gen2.normal.fill_no_accelerate(start: &a2, count: 10)
+        XCTAssertEqual(a1, a2)
     }
 }
