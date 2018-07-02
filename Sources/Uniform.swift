@@ -2,119 +2,125 @@ import Foundation
 
 extension Uniform where Base == XorshiftGenerator {
     // MARK: Generic
-    mutating func next_generic<T: FloatDouble>(low: T, high: T) -> T {
-        precondition(low < high, "Invalid argument: must be `low` < `high`")
-        return T.random12(multiplier: high - low,
-                          adder: 2*low-high,
+    mutating func next_generic<T: FloatDouble>(_ range: Range<T>) -> T {
+        return T.random12(multiplier: range.upperBound - range.lowerBound,
+                          adder: 2*range.lowerBound - range.upperBound,
                           x: &base.x, y: &base.y, z: &base.z, w: &base.w)
     }
     
-    mutating func fill_generic<T: FloatDouble>(start: UnsafeMutablePointer<T>, count: Int, low: T, high: T) {
-        precondition(low < high, "Invalid argument: must be `low` < `high`")
+    mutating func fill_generic<T: FloatDouble>(start: UnsafeMutablePointer<T>, count: Int, with range: Range<T>) {
         precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
         T.fill12(start: start,
                  count: count,
-                 multiplier: high - low,
-                 adder: 2*low - high,
+                 multiplier: range.upperBound - range.lowerBound,
+                 adder: 2*range.lowerBound - range.upperBound,
                  x: &base.x, y: &base.y, z: &base.z, w: &base.w)
     }
     
     // MARK: Float
     
-    /// Sample random number from unifrom distribution [low, high).
-    /// - Precondition:
-    ///   - `low` < `high`
-    public mutating func next(low: Float = 0, high: Float = 1) -> Float {
-        return next_generic(low: low, high: high)
+    /// Sample random number from unifrom distribution.
+    /// - Parameter range: Range of uniform distribution, default: 0..<1
+    public mutating func next(_ range: Range<Float> = 0..<1) -> Float {
+        return next_generic(range)
     }
     
-    /// Sample random numbers from unifrom distribution [low, high).
+    /// Sample random numbers from unifrom distribution.
+    /// - Parameters:
+    ///   - count: Number of elements to sample
+    ///   - range: Range of uniform distribution, default: 0..<1
     /// - Precondition:
     ///   - `count` >= 0
-    ///   - `low` < `high`
-    public mutating func generate(count: Int, low: Float = 0, high: Float = 1) -> [Float] {
+    public mutating func generate(count: Int, from range: Range<Float> = 0..<1) -> [Float] {
         var array = [Float](repeating: 0, count: count)
-        fill(&array, low: low, high: high)
+        fill(&array, with: range)
         return array
     }
     
-    /// Sample random numbers from unifrom distribution [low, high).
-    /// - Precondition:
-    ///   - `low` < `high`
-    public mutating func fill(_ array: inout [Float], low: Float = 0, high: Float = 1) {
+    /// Sample random numbers from unifrom distribution.
+    /// - Parameters:
+    ///   - array: Array to fill
+    ///   - range: Range of uniform distribution, default: 0..<1
+    public mutating func fill(_ array: inout [Float], with range: Range<Float> = 0..<1) {
         array.withUnsafeMutableBufferPointer {
-            fill($0, low: low, high: high)
+            fill($0, with: range)
         }
     }
     
-    /// Sample random numbers from unifrom distribution [low, high).
-    /// - Precondition:
-    ///   - `count` >= 0
-    ///   - `low` < `high`
-    public mutating func fill(_ buffer: UnsafeMutableBufferPointer<Float>, low: Float = 0, high: Float = 1) {
+    /// Sample random numbers from unifrom distribution.
+    /// - Parameters:
+    ///   - buffer: BufferPointer to fill
+    ///   - range: Range of uniform distribution, default: 0..<1
+    public mutating func fill(_ buffer: UnsafeMutableBufferPointer<Float>, with range: Range<Float> = 0..<1) {
         buffer.baseAddress.map {
-            fill(start: $0, count: buffer.count, low: low, high: high)
+            fill(start: $0, count: buffer.count, with: range)
         }
     }
     
-    /// Sample random numbers from unifrom distribution [low, high).
+    /// Sample random numbers from unifrom distribution.
+    /// - Parameters:
+    ///   - start: Pointer to start location
+    ///   - count: Number of elements to fill
+    ///   - range: Range of uniform distribution, default: 0..<1
     /// - Precondition:
     ///   - `count` >= 0
-    ///   - `low` < `high`
     public mutating func fill(start: UnsafeMutablePointer<Float>,
                               count: Int,
-                              low: Float = 0,
-                              high: Float = 1) {
-        fill_generic(start: start, count: count, low: low, high: high)
+                              with range: Range<Float> = 0..<1) {
+        fill_generic(start: start, count: count, with: range)
     }
     
     
     // MARK: Double
     
-    /// Sample random Float number from unifrom distribution [low, high).
-    /// - Precondition:
-    ///   - `low` < `high`
-    public mutating func next(low: Double = 0, high: Double = 1) -> Double {
-        return next_generic(low: low, high: high)
+    /// Sample random Float number from unifrom distribution.
+    /// - Parameter range: Range of uniform distribution, default: 0..<1
+    public mutating func next(_ range: Range<Double> = 0..<1) -> Double {
+        return next_generic(range)
     }
     
-    /// Sample random numbers from unifrom distribution [low, high).
+    /// Sample random numbers from unifrom distribution.
+    /// - Parameters:
+    ///   - count: Number of elements to sample
+    ///   - range: Range of uniform distribution, default: 0..<1
     /// - Precondition:
     ///   - `count` >= 0
-    ///   - `low` < `high`
-    public mutating func generate(count: Int, low: Double = 0, high: Double = 1) -> [Double] {
+    public mutating func generate(count: Int, from range: Range<Double> = 0..<1) -> [Double] {
         var array = [Double](repeating: 0, count: count)
-        fill(&array, low: low, high: high)
+        fill(&array, with: range)
         return array
     }
     
-    /// Sample random numbers from unifrom distribution [low, high).
-    /// - Precondition:
-    ///   - `low` < `high`
-    public mutating func fill(_ array: inout [Double], low: Double = 0, high: Double = 1) {
+    /// Sample random numbers from unifrom distribution.
+    /// - Parameters:
+    ///   - array: Array to fill
+    ///   - range: Range of uniform distribution, default: 0..<1
+    public mutating func fill(_ array: inout [Double], with range: Range<Double> = 0..<1) {
         array.withUnsafeMutableBufferPointer {
-            fill($0, low: low, high: high)
+            fill($0, with: range)
         }
     }
     
-    /// Sample random numbers from unifrom distribution [low, high).
-    /// - Precondition:
-    ///   - `count` >= 0
-    ///   - `low` < `high`
-    public mutating func fill(_ buffer: UnsafeMutableBufferPointer<Double>, low: Double = 0, high: Double = 1) {
+    /// Sample random numbers from unifrom distribution.
+    /// - Parameters:
+    ///   - buffer: BufferPointer to fill
+    ///   - range: Range of uniform distribution, default: 0..<1
+    public mutating func fill(_ buffer: UnsafeMutableBufferPointer<Double>, with range: Range<Double> = 0..<1) {
         buffer.baseAddress.map {
-            fill(start: $0, count: buffer.count, low: low, high: high)
+            fill(start: $0, count: buffer.count, with: range)
         }
     }
     
-    /// Sample random numbers from unifrom distribution [low, high).
+    /// Sample random numbers from unifrom distribution.
+    /// - Parameters:
+    ///   - start: Pointer to start location
+    ///   - count: Number of elements to fill
+    ///   - range: Range of uniform distribution, default: 0..<1
     /// - Precondition:
     ///   - `count` >= 0
-    ///   - `low` < `high`
     public mutating func fill(start: UnsafeMutablePointer<Double>,
                               count: Int,
-                              low: Double = 0,
-                              high: Double = 1) {
-        fill_generic(start: start, count: count, low: low, high: high)
+                              with range: Range<Double> = 0..<1) {
+        fill_generic(start: start, count: count, with: range)
     }
 }

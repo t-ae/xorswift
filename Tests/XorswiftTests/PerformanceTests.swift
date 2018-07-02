@@ -70,7 +70,7 @@ extension PerformanceTests {
         var a = [Float](repeating: 0, count: count)
         measure {
             for _ in 0..<100 {
-                XorshiftGenerator.default.uniform.fill(start: &a, count: a.count, low: 0, high: 1)
+                XorshiftGenerator.default.uniform.fill(start: &a, count: a.count, with: 0..<1)
             }
         }
     }
@@ -80,7 +80,7 @@ extension PerformanceTests {
         var a = [Double](repeating: 0, count: count)
         measure {
             for _ in 0..<100 {
-                XorshiftGenerator.default.uniform.fill(start: &a, count: a.count, low: 0, high: 1)
+                XorshiftGenerator.default.uniform.fill(start: &a, count: a.count, with: 0..<1)
             }
         }
     }

@@ -64,7 +64,7 @@ class XorswiftTests: XCTestCase {
             let count = 1_000_002
             var a = [T](repeating: 0, count: count)
             
-            XorshiftGenerator.default.uniform.fill(start: &a, count: count, low: 1, high: 2)
+            XorshiftGenerator.default.uniform.fill(start: &a, count: count, with: 1..<2)
             let mean = a.reduce(0, +) / T(a.count)
             
             XCTAssertEqual(mean, 1.5, accuracy: 1e-3)
@@ -74,7 +74,7 @@ class XorswiftTests: XCTestCase {
         do {
             let count = 1_000_003
             
-            let a: [T] = XorshiftGenerator.default.uniform.generate(count: count, low: 1, high: 2)
+            let a: [T] = XorshiftGenerator.default.uniform.generate(count: count, from: 1..<2)
             let mean = a.reduce(0, +) / T(a.count)
             
             XCTAssertEqual(mean, 1.5, accuracy: 1e-3)
@@ -85,7 +85,7 @@ class XorswiftTests: XCTestCase {
             let count = 0
             var a = [T](repeating: 0, count: count)
             
-            XorshiftGenerator.default.uniform.fill(start: &a, count: count, low: -1, high: 1)
+            XorshiftGenerator.default.uniform.fill(start: &a, count: count, with: -1..<1)
             
             XCTAssertEqual(a, [])
         }
@@ -108,7 +108,7 @@ class XorswiftTests: XCTestCase {
             let count = 1_000_001
             var a = [T](repeating: 0, count: count)
             
-            XorshiftGenerator.default.uniform.fill(start: &a, count: count, low: 1, high: 2)
+            XorshiftGenerator.default.uniform.fill(start: &a, count: count, with: 1..<2)
             let mean = a.reduce(0, +) / T(a.count)
             
             XCTAssertEqual(mean, 1.5, accuracy: 1e-3)
@@ -118,7 +118,7 @@ class XorswiftTests: XCTestCase {
         do {
             let count = 1_000_001
             
-            let a: [T] = XorshiftGenerator.default.uniform.generate(count: count, low: 1, high: 2)
+            let a: [T] = XorshiftGenerator.default.uniform.generate(count: count, from: 1..<2)
             let mean = a.reduce(0, +) / T(a.count)
             
             XCTAssertEqual(mean, 1.5, accuracy: 1e-3)
@@ -129,7 +129,7 @@ class XorswiftTests: XCTestCase {
             let count = 0
             var a = [T](repeating: 0, count: count)
             
-            XorshiftGenerator.default.uniform.fill(start: &a, count: count, low: -1, high: 1)
+            XorshiftGenerator.default.uniform.fill(start: &a, count: count, with: -1..<1)
             
             XCTAssertEqual(a, [])
         }
