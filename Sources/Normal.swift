@@ -291,7 +291,7 @@ public struct Normal {
         let r = T.random12(multiplier: -1, adder: 2,
                            x: &base.x, y: &base.y, z: &base.z, w: &base.w)
         let t = T.random12(multiplier: 2*T.pi, adder: 0
-            , x: &x, y: &y, z: &z, w: &w)
+            , x: &base.x, y: &base.y, z: &base.z, w: &base.w)
         
         return sigma*sqrt(-2*T.log(r))*T.sin(t) + mu
     }
@@ -393,7 +393,7 @@ public struct Normal {
     /// Sample random numbers from normal distribution N(mu, sigma^2).
     /// - Precondition:
     ///   - `sigma` >= 0
-    public mutating func next(mu: Float, sigma: Float) -> Float {
+    public mutating func next(mu: Float = 0, sigma: Float = 1) -> Float {
         return next_generic(mu: mu, sigma: sigma)
     }
     
@@ -403,7 +403,7 @@ public struct Normal {
     /// - Precondition:
     ///   - `count` >= 0
     ///   - `sigma` >= 0
-    public mutating func generate(count: Int, mu: Float, sigma: Float) -> [Float] {
+    public mutating func generate(count: Int, mu: Float = 0, sigma: Float = 1) -> [Float] {
         var array = [Float](repeating: 0, count: count)
         fill(&array, mu: mu, sigma: sigma)
         return array
@@ -414,7 +414,7 @@ public struct Normal {
     /// Use Accelerate framework if available.
     /// - Precondition:
     ///   - `sigma` >= 0
-    public mutating func fill(_ array: inout [Float], mu: Float, sigma: Float) {
+    public mutating func fill(_ array: inout [Float], mu: Float = 0, sigma: Float = 1) {
         array.withUnsafeMutableBufferPointer {
             fill($0, mu: mu, sigma: sigma)
         }
@@ -425,7 +425,7 @@ public struct Normal {
     /// Use Accelerate framework if available.
     /// - Precondition:
     ///   - `sigma` >= 0
-    public mutating func fill(_ buffer: UnsafeMutableBufferPointer<Float>, mu: Float, sigma: Float) {
+    public mutating func fill(_ buffer: UnsafeMutableBufferPointer<Float>, mu: Float = 0, sigma: Float = 1) {
         buffer.baseAddress.map {
             fill(start: $0, count: buffer.count, mu: mu, sigma: sigma)
         }
@@ -439,8 +439,8 @@ public struct Normal {
     ///   - `sigma` >= 0
     public mutating func fill(start: UnsafeMutablePointer<Float>,
                               count: Int,
-                              mu: Float,
-                              sigma: Float) {
+                              mu: Float = 0,
+                              sigma: Float = 1) {
         fill_generic(start: start, count: count, mu: mu, sigma: sigma)
     }
     /// Sample random numbers from normal distribution N(mu, sigma^2).
@@ -451,8 +451,8 @@ public struct Normal {
     ///   - `sigma` >= 0
     public mutating func fill_no_accelerate(start: UnsafeMutablePointer<Float>,
                                           count: Int,
-                                          mu: Float,
-                                          sigma: Float) {
+                                          mu: Float = 0,
+                                          sigma: Float = 1) {
         fill_generic_no_accelerate(start: start, count: count, mu: mu, sigma: sigma)
     }
     
@@ -461,7 +461,7 @@ public struct Normal {
     /// Sample random numbers from normal distribution N(mu, sigma^2).
     /// - Precondition:
     ///   - `sigma` >= 0
-    public mutating func next(mu: Double, sigma: Double) -> Double {
+    public mutating func next(mu: Double = 0, sigma: Double = 1) -> Double {
         return next_generic(mu: mu, sigma: sigma)
     }
     
@@ -471,7 +471,7 @@ public struct Normal {
     /// - Precondition:
     ///   - `count` >= 0
     ///   - `sigma` >= 0
-    public mutating func generate(count: Int, mu: Double, sigma: Double) -> [Double] {
+    public mutating func generate(count: Int, mu: Double = 0, sigma: Double = 1) -> [Double] {
         var array = [Double](repeating: 0, count: count)
         fill(&array, mu: mu, sigma: sigma)
         return array
@@ -482,7 +482,7 @@ public struct Normal {
     /// Use Accelerate framework if available.
     /// - Precondition:
     ///   - `sigma` >= 0
-    public mutating func fill(_ array: inout [Double], mu: Double, sigma: Double) {
+    public mutating func fill(_ array: inout [Double], mu: Double = 0, sigma: Double = 1) {
         array.withUnsafeMutableBufferPointer {
             fill($0, mu: mu, sigma: sigma)
         }
@@ -493,7 +493,7 @@ public struct Normal {
     /// Use Accelerate framework if available.
     /// - Precondition:
     ///   - `sigma` >= 0
-    public mutating func fill(_ buffer: UnsafeMutableBufferPointer<Double>, mu: Double, sigma: Double) {
+    public mutating func fill(_ buffer: UnsafeMutableBufferPointer<Double>, mu: Double = 0, sigma: Double = 1) {
         buffer.baseAddress.map {
             fill(start: $0, count: buffer.count, mu: mu, sigma: sigma)
         }
@@ -507,8 +507,8 @@ public struct Normal {
     ///   - `sigma` >= 0
     public mutating func fill(start: UnsafeMutablePointer<Double>,
                               count: Int,
-                              mu: Double,
-                              sigma: Double) {
+                              mu: Double = 0,
+                              sigma: Double = 1) {
         fill_generic(start: start, count: count, mu: mu, sigma: sigma)
     }
     /// Sample random numbers from normal distribution N(mu, sigma^2).
@@ -519,8 +519,8 @@ public struct Normal {
     ///   - `sigma` >= 0
     public mutating func fill_no_accelerate(start: UnsafeMutablePointer<Double>,
                                             count: Int,
-                                            mu: Double,
-                                            sigma: Double) {
+                                            mu: Double = 0,
+                                            sigma: Double = 1) {
         fill_generic_no_accelerate(start: start, count: count, mu: mu, sigma: sigma)
     }
 }

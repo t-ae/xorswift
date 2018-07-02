@@ -165,7 +165,7 @@ public struct Uniform {
     /// Sample random number from unifrom distribution [low, high).
     /// - Precondition:
     ///   - `low` < `high`
-    public mutating func next(low: Float, high: Float) -> Float {
+    public mutating func next(low: Float = 0, high: Float = 1) -> Float {
         return next_generic(low: low, high: high)
     }
     
@@ -173,7 +173,7 @@ public struct Uniform {
     /// - Precondition:
     ///   - `count` >= 0
     ///   - `low` < `high`
-    public mutating func generate(count: Int, low: Float, high: Float) -> [Float] {
+    public mutating func generate(count: Int, low: Float = 0, high: Float = 1) -> [Float] {
         var array = [Float](repeating: 0, count: count)
         fill(&array, low: low, high: high)
         return array
@@ -182,7 +182,7 @@ public struct Uniform {
     /// Sample random numbers from unifrom distribution [low, high).
     /// - Precondition:
     ///   - `low` < `high`
-    public mutating func fill(_ array: inout [Float], low: Float, high: Float) {
+    public mutating func fill(_ array: inout [Float], low: Float = 0, high: Float = 1) {
         array.withUnsafeMutableBufferPointer {
             fill($0, low: low, high: high)
         }
@@ -192,7 +192,7 @@ public struct Uniform {
     /// - Precondition:
     ///   - `count` >= 0
     ///   - `low` < `high`
-    public mutating func fill(_ buffer: UnsafeMutableBufferPointer<Float>, low: Float, high: Float) {
+    public mutating func fill(_ buffer: UnsafeMutableBufferPointer<Float>, low: Float = 0, high: Float = 1) {
         buffer.baseAddress.map {
             fill(start: $0, count: buffer.count, low: low, high: high)
         }
@@ -204,8 +204,8 @@ public struct Uniform {
     ///   - `low` < `high`
     public mutating func fill(start: UnsafeMutablePointer<Float>,
                               count: Int,
-                              low: Float,
-                              high: Float) {
+                              low: Float = 0,
+                              high: Float = 1) {
         fill_generic(start: start, count: count, low: low, high: high)
     }
     
@@ -215,7 +215,7 @@ public struct Uniform {
     /// Sample random Float number from unifrom distribution [low, high).
     /// - Precondition:
     ///   - `low` < `high`
-    public mutating func next(low: Double, high: Double) -> Double {
+    public mutating func next(low: Double = 0, high: Double = 1) -> Double {
         return next_generic(low: low, high: high)
     }
     
@@ -223,7 +223,7 @@ public struct Uniform {
     /// - Precondition:
     ///   - `count` >= 0
     ///   - `low` < `high`
-    public mutating func generate(count: Int, low: Double, high: Double) -> [Double] {
+    public mutating func generate(count: Int, low: Double = 0, high: Double = 1) -> [Double] {
         var array = [Double](repeating: 0, count: count)
         fill(&array, low: low, high: high)
         return array
@@ -232,7 +232,7 @@ public struct Uniform {
     /// Sample random numbers from unifrom distribution [low, high).
     /// - Precondition:
     ///   - `low` < `high`
-    public mutating func fill(_ array: inout [Double], low: Double, high: Double) {
+    public mutating func fill(_ array: inout [Double], low: Double = 0, high: Double = 1) {
         array.withUnsafeMutableBufferPointer {
             fill($0, low: low, high: high)
         }
@@ -242,7 +242,7 @@ public struct Uniform {
     /// - Precondition:
     ///   - `count` >= 0
     ///   - `low` < `high`
-    public mutating func fill(_ buffer: UnsafeMutableBufferPointer<Double>, low: Double, high: Double) {
+    public mutating func fill(_ buffer: UnsafeMutableBufferPointer<Double>, low: Double = 0, high: Double = 1) {
         buffer.baseAddress.map {
             fill(start: $0, count: buffer.count, low: low, high: high)
         }
@@ -254,8 +254,8 @@ public struct Uniform {
     ///   - `low` < `high`
     public mutating func fill(start: UnsafeMutablePointer<Double>,
                               count: Int,
-                              low: Double,
-                              high: Double) {
+                              low: Double = 0,
+                              high: Double = 1) {
         fill_generic(start: start, count: count, low: low, high: high)
     }
 }

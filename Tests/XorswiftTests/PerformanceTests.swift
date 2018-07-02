@@ -19,7 +19,7 @@ extension PerformanceTests {
     func testPerformance_xorshift_single() {
         measure {
             for _ in 0..<10_000_000 {
-                _ = xorshift()
+                _ = XorshiftGenerator.default.next()
             }
         }
     }
@@ -41,7 +41,7 @@ extension PerformanceTests {
         var a = [UInt32](repeating: 0, count: count)
         measure {
             for _ in 0..<100 {
-                xorshift(start: &a, count: a.count)
+                XorshiftGenerator.default.fill(start: &a, count: a.count)
             }
         }
     }
@@ -70,7 +70,7 @@ extension PerformanceTests {
         var a = [Float](repeating: 0, count: count)
         measure {
             for _ in 0..<100 {
-                xorshift_uniform(start: &a, count: a.count, low: 0, high: 1)
+                XorshiftGenerator.default.uniform.fill(start: &a, count: a.count, low: 0, high: 1)
             }
         }
     }
@@ -80,7 +80,7 @@ extension PerformanceTests {
         var a = [Double](repeating: 0, count: count)
         measure {
             for _ in 0..<100 {
-                xorshift_uniform(start: &a, count: a.count, low: 0, high: 1)
+                XorshiftGenerator.default.uniform.fill(start: &a, count: a.count, low: 0, high: 1)
             }
         }
     }
@@ -93,7 +93,7 @@ extension PerformanceTests {
         var a = [Float](repeating: 0, count: count)
         measure {
             for _ in 0..<100 {
-                xorshift_normal(start: &a, count: a.count, mu: 0, sigma: 1)
+                XorshiftGenerator.default.normal.fill(start: &a, count: a.count, mu: 0, sigma: 1)
             }
         }
     }
@@ -104,7 +104,7 @@ extension PerformanceTests {
         var a = [Float](repeating: 0, count: count)
         measure {
             for _ in 0..<100 {
-                xorshift_normal_no_accelerate(start: &a, count: a.count, mu: 0, sigma: 1)
+                XorshiftGenerator.default.normal.fill_no_accelerate(start: &a, count: a.count, mu: 0, sigma: 1)
             }
         }
     }
@@ -117,7 +117,7 @@ extension PerformanceTests {
         var a = [Double](repeating: 0, count: count)
         measure {
             for _ in 0..<100 {
-                xorshift_normal(start: &a, count: a.count, mu: 0, sigma: 1)
+                XorshiftGenerator.default.normal.fill(start: &a, count: a.count, mu: 0, sigma: 1)
             }
         }
     }
@@ -128,7 +128,7 @@ extension PerformanceTests {
         var a = [Double](repeating: 0, count: count)
         measure {
             for _ in 0..<100 {
-                xorshift_normal_no_accelerate(start: &a, count: a.count, mu: 0, sigma: 1)
+                XorshiftGenerator.default.normal.fill_no_accelerate(start: &a, count: a.count, mu: 0, sigma: 1)
             }
         }
     }
