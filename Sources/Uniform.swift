@@ -133,3 +133,4 @@ public func xorshift_uniform(start: UnsafeMutablePointer<Double>,
                              high: Double = 1) {
     xorshift_uniform_generic(start: start, count: count, low: low, high: high)
 }
+
