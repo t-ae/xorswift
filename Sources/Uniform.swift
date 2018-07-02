@@ -1,11 +1,6 @@
 import Foundation
 
-public struct Uniform {
-    var base: XorshiftGenerator
-    init(base: XorshiftGenerator) {
-        self.base = base
-    }
-    
+extension Uniform where Base == XorshiftGenerator {
     // MARK: Generic
     mutating func next_generic<T: FloatDouble>(low: T, high: T) -> T {
         precondition(low < high, "Invalid argument: must be `low` < `high`")
@@ -121,17 +116,5 @@ public struct Uniform {
                               low: Double = 0,
                               high: Double = 1) {
         fill_generic(start: start, count: count, low: low, high: high)
-    }
-}
-
-
-extension XorshiftGenerator {
-    public var uniform: Uniform {
-        get {
-            return Uniform(base: self)
-        }
-        set {
-            self = newValue.base
-        }
     }
 }

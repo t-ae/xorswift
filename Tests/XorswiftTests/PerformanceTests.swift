@@ -2,7 +2,7 @@ import XCTest
 #if canImport(Accelerate)
 import Accelerate
 #endif
-@testable import Xorswift
+import Xorswift
 
 class PerformanceTests: XCTestCase {
 }

@@ -3,12 +3,7 @@ import Foundation
 import Accelerate
 #endif
 
-public struct Normal {
-    var base: XorshiftGenerator
-    init(base: XorshiftGenerator) {
-        self.base = base
-    }
-    
+extension Normal where Base == XorshiftGenerator {
     // MARK: Generic
     mutating func next_generic<T: FloatDouble>(mu: T,
                                                sigma: T) -> T {
@@ -16,8 +11,8 @@ public struct Normal {
         
         let r = T.random12(multiplier: -1, adder: 2,
                            x: &base.x, y: &base.y, z: &base.z, w: &base.w)
-        let t = T.random12(multiplier: 2*T.pi, adder: 0
-            , x: &base.x, y: &base.y, z: &base.z, w: &base.w)
+        let t = T.random12(multiplier: 2*T.pi, adder: 0,
+                           x: &base.x, y: &base.y, z: &base.z, w: &base.w)
         
         return sigma*sqrt(-2*T.log(r))*T.sin(t) + mu
     }
@@ -176,9 +171,9 @@ public struct Normal {
     ///   - `count` >= 0
     ///   - `sigma` >= 0
     public mutating func fill_no_accelerate(start: UnsafeMutablePointer<Float>,
-                                          count: Int,
-                                          mu: Float = 0,
-                                          sigma: Float = 1) {
+                                            count: Int,
+                                            mu: Float = 0,
+                                            sigma: Float = 1) {
         fill_generic_no_accelerate(start: start, count: count, mu: mu, sigma: sigma)
     }
     
@@ -248,17 +243,5 @@ public struct Normal {
                                             mu: Double = 0,
                                             sigma: Double = 1) {
         fill_generic_no_accelerate(start: start, count: count, mu: mu, sigma: sigma)
-    }
-}
-
-
-extension XorshiftGenerator {
-    public var normal: Normal {
-        get {
-            return Normal(base: self)
-        }
-        set {
-            self = newValue.base
-        }
     }
 }
