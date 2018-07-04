@@ -29,20 +29,14 @@ public struct XorshiftGenerator: RandomNumberGenerator {
         return w
     }
     
-    /// Generate random number.
-    public mutating func next<T>() -> T where T : FixedWidthInteger, T : UnsignedInteger {
-        if T.bitWidth <= 32 {
-            let uint32 = next() as UInt32
-            return T(uint32 >> (32 - T.bitWidth))
-        } else {
-            let cnt = (T.bitWidth + 31) / 32
-            var ret: T = 0
-            for _ in 0..<cnt {
-                ret <<= 32
-                ret |= T(next() as UInt32)
-            }
-            return ret
-        }
+    /// Generate random UInt64 number.
+    public mutating func next() -> UInt64 {
+        let t1 = x ^ (x << 11)
+        let t2 = y ^ (y << 11)
+        x = z; y = w;
+        z = (x ^ (x >> 19)) ^ (t1 ^ (t1 >> 8))
+        w = (y ^ (y >> 19)) ^ (t2 ^ (t2 >> 8))
+        return UInt64(z) << 32 | UInt64(w)
     }
     
     /// Fill array with random UInt32 numbers.

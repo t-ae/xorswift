@@ -19,7 +19,7 @@ extension PerformanceTests {
     func testPerformance_xorshift_single() {
         measure {
             for _ in 0..<10_000_000 {
-                _ = XorshiftGenerator.default.next()
+                _ = XorshiftGenerator.default.next() as UInt32
             }
         }
     }
