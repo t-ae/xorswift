@@ -19,34 +19,6 @@ class XorswiftTests: XCTestCase {
         }
     }
     
-    func testXorshift_uniform_float_single() {
-        typealias T = Float
-        do {
-            let count = 1_000_001
-            let a: [T] = (0..<count).map { _ in XorshiftGenerator.default.uniform.next() }
-            
-            let mean = a.reduce(0, +) / T(a.count)
-            
-            XCTAssertEqual(mean, 0.5, accuracy: 1e-3)
-            XCTAssertGreaterThanOrEqual(a.min()!, 0)
-            XCTAssertLessThan(a.max()!, 1)
-        }
-    }
-    
-    func testXorshift_uniform_double_single() {
-        typealias T = Double
-        do {
-            let count = 1_000_001
-            let a: [T] = (0..<count).map { _ in XorshiftGenerator.default.uniform.next() }
-            
-            let mean = a.reduce(0, +) / T(a.count)
-            
-            XCTAssertEqual(mean, 0.5, accuracy: 1e-3)
-            XCTAssertGreaterThanOrEqual(a.min()!, 0)
-            XCTAssertLessThan(a.max()!, 1)
-        }
-    }
-    
     func testXorshift_uniform_float() {
         typealias T = Float
         do {
@@ -132,36 +104,6 @@ class XorswiftTests: XCTestCase {
             XorshiftGenerator.default.uniform.fill(start: &a, count: count, with: -1..<1)
             
             XCTAssertEqual(a, [])
-        }
-    }
-    
-    func testXorshift_normal_float_single() {
-        typealias T = Float
-        do {
-            let count = 1_000_001
-            let a: [T] = (0..<count).map { _ in XorshiftGenerator.default.normal.next() }
-            
-            let mean = a.reduce(0, +) / T(a.count)
-            let mean2: T = a.map { $0*$0 }.reduce(0, +) / T(a.count)
-            let variance = mean2 - mean*mean
-            
-            XCTAssertEqual(mean, 0, accuracy: 1e-2)
-            XCTAssertEqual(variance, 1, accuracy: 1e-2)
-        }
-    }
-    
-    func testXorshift_normal_double_single() {
-        typealias T = Double
-        do {
-            let count = 1_000_001
-            let a: [T] = (0..<count).map { _ in XorshiftGenerator.default.normal.next() }
-            
-            let mean = a.reduce(0, +) / T(a.count)
-            let mean2: T = a.map { $0*$0 }.reduce(0, +) / T(a.count)
-            let variance = mean2 - mean*mean
-            
-            XCTAssertEqual(mean, 0, accuracy: 1e-2)
-            XCTAssertEqual(variance, 1, accuracy: 1e-2)
         }
     }
     

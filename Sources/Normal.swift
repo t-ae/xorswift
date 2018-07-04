@@ -5,18 +5,6 @@ import Accelerate
 
 extension Normal where Base == XorshiftGenerator {
     // MARK: Generic
-    mutating func next_generic<T: FloatDouble>(mu: T,
-                                               sigma: T) -> T {
-        precondition(sigma >= 0, "Invalid argument: `sigma` must not be less than 0.")
-        
-        let r = T.random12(multiplier: -1, adder: 2,
-                           x: &base.x, y: &base.y, z: &base.z, w: &base.w)
-        let t = T.random12(multiplier: 2*T.pi, adder: 0,
-                           x: &base.x, y: &base.y, z: &base.z, w: &base.w)
-        
-        return sigma*sqrt(-2*T.log(r))*T.sin(t) + mu
-    }
-    
     #if canImport(Accelerate)
     
     mutating func fill_generic<T: FloatDouble>(start: UnsafeMutablePointer<T>,
@@ -112,13 +100,6 @@ extension Normal where Base == XorshiftGenerator {
     // MARK: Float
     
     /// Sample random numbers from normal distribution N(mu, sigma^2).
-    /// - Precondition:
-    ///   - `sigma` >= 0
-    public mutating func next(mu: Float = 0, sigma: Float = 1) -> Float {
-        return next_generic(mu: mu, sigma: sigma)
-    }
-    
-    /// Sample random numbers from normal distribution N(mu, sigma^2).
     ///
     /// Use Accelerate framework if available.
     /// - Precondition:
@@ -178,13 +159,6 @@ extension Normal where Base == XorshiftGenerator {
     }
     
     // MARK: Double
-    
-    /// Sample random numbers from normal distribution N(mu, sigma^2).
-    /// - Precondition:
-    ///   - `sigma` >= 0
-    public mutating func next(mu: Double = 0, sigma: Double = 1) -> Double {
-        return next_generic(mu: mu, sigma: sigma)
-    }
     
     /// Sample random numbers from normal distribution N(mu, sigma^2).
     ///
