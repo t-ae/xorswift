@@ -82,16 +82,16 @@ extension Normal where Base == XorshiftGenerator {
                  x: &base.x, y: &base.y, z: &base.z, w: &base.w)
         
         if count%2 != 0 {
-            let theta = T.random12(multiplier: 2*T.pi, adder: 0,
-                                   x: &base.x, y: &base.y, z: &base.z, w: &base.w)
-            rp.pointee = sqrt(minus2sigma2*T.log(rp.pointee))*T.sin(theta) + mu
+            var t: T = 0
+            T.fill12(start: &t, count: 1, multiplier: 2*T.pi, adder: 0,
+                     x: &base.x, y: &base.y, z: &base.z, w: &base.w)
+            rp.pointee = sqrt(minus2sigma2*T.log(rp.pointee))*T.sin(t) + mu
             rp += 1
         }
         for _ in 0..<(count-half) {
             let r = sqrt(minus2sigma2*T.log(rp.pointee))
-            let t = tp.pointee
-            rp.pointee = r * T.sin(t) + mu
-            tp.pointee = r * T.cos(t) + mu
+            rp.pointee = r * T.sin(tp.pointee) + mu
+            tp.pointee = r * T.cos(tp.pointee) + mu
             rp += 1
             tp += 1
         }

@@ -61,9 +61,9 @@ public struct XorshiftGenerator: RandomNumberGenerator {
         var p = start
         
         for _ in 0..<min(4, count) {
-            let t = x ^ (x << 11)
+            p.pointee = x ^ (x << 11)
             x = y; y = z; z = w;
-            w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))
+            w = (w ^ (w >> 19)) ^ (p.pointee ^ (p.pointee >> 8))
             p.pointee = w
             p += 1
         }
@@ -75,8 +75,8 @@ public struct XorshiftGenerator: RandomNumberGenerator {
         var xp = p - 4
         var wp = p - 1
         for _ in 0..<count-4 {
-            let t = xp.pointee ^ (xp.pointee << 11)
-            p.pointee = (wp.pointee ^ (wp.pointee >> 19)) ^ (t ^ (t >> 8))
+            p.pointee = xp.pointee ^ (xp.pointee << 11)
+            p.pointee = (wp.pointee ^ (wp.pointee >> 19)) ^ (p.pointee ^ (p.pointee >> 8))
             
             p += 1
             wp += 1
