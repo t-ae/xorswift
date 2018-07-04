@@ -12,4 +12,24 @@ class OtherTests: XCTestCase {
         let maximum = Double(bitPattern: UInt64(maxx<<12)<<20 | UInt64(maxx) | 0x3ff0_0000_0000_0000) - 1
         XCTAssertLessThan(maximum, 1)
     }
+    
+    func testShiftOperation() {
+        let ans = UInt32(1) << 31
+        measure {
+            for _ in 0..<100_000 {
+                let a = UInt32(1) << 31
+                XCTAssertEqual(a, ans)
+            }
+        }
+    }
+    
+    func testMaskedShiftOperation() {
+        let ans = UInt32(1) << 31
+        measure {
+            for _ in 0..<100_000 {
+                let a = UInt32(1) &<< 31
+                XCTAssertEqual(a, ans)
+            }
+        }
+    }
 }
