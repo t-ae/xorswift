@@ -17,6 +17,16 @@ class XorswiftTests: XCTestCase {
             
             XCTAssertEqual(Set(a).count, 10)
         }
+        do {
+            var resultOr: UInt64 = 0
+            var resultAnd: UInt64 = 0xffff_ffff_ffff_ffff
+            for _ in 0..<100_000 {
+                resultOr |= XorshiftGenerator.default.next()
+                resultAnd &= XorshiftGenerator.default.next()
+            }
+            XCTAssertEqual(resultOr, 0xffff_ffff_ffff_ffff)
+            XCTAssertEqual(resultAnd, 0)
+        }
     }
     
     func testXorshift_uniform_float() {
