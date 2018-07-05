@@ -28,4 +28,8 @@ class XorshiftGeneratorTests: XCTestCase {
         gen2.normal.fill_no_accelerate(start: &a2, count: 10)
         XCTAssertEqual(a1, a2)
     }
+    
+    static let allTests = [
+        ("testCoW", testCoW)
+    ]
 }

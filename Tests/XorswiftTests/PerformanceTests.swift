@@ -8,6 +8,7 @@ class PerformanceTests: XCTestCase {
 }
 
 extension PerformanceTests {
+    #if os(macOS)
     func testPerformance_arc4random_single() {
         measure {
             for _ in 0..<10_000_000 {
@@ -15,6 +16,7 @@ extension PerformanceTests {
             }
         }
     }
+    #endif
     
     func testPerformance_xorshift_single() {
         measure {
@@ -26,6 +28,7 @@ extension PerformanceTests {
 }
 
 extension PerformanceTests {
+    #if os(macOS)
     func testPerformance_arc4random() {
         let count = 1_000_000
         var a = [UInt32](repeating: 0, count: count)
@@ -35,6 +38,7 @@ extension PerformanceTests {
             }
         }
     }
+    #endif
     
     func testPerformance_xorshift() {
         let count = 1_000_000

@@ -2,7 +2,7 @@ import XCTest
 import Foundation
 import Xorswift
 
-class XorswiftTests: XCTestCase {
+class XorshiftTests: XCTestCase {
     func testXorshift() {
         do {
             let count = 0
@@ -162,7 +162,7 @@ class XorswiftTests: XCTestCase {
         }
     }
     
-    func testXorshift_normal_dobule() {
+    func testXorshift_normal_double() {
         typealias T = Double
         do {
             let count = 1_000_000
@@ -240,7 +240,7 @@ class XorswiftTests: XCTestCase {
         }
     }
     
-    func testXorshift_normal_no_accelerate_dobule() {
+    func testXorshift_normal_no_accelerate_double() {
         typealias T = Double
         do {
             let count = 1_000_000
@@ -272,4 +272,14 @@ class XorswiftTests: XCTestCase {
             XCTAssertEqual(a, [])
         }
     }
+    
+    static let allTests = [
+        ("testXorshift", testXorshift),
+        ("testXorshift_uniform_float", testXorshift_uniform_float),
+        ("testXorshift_uniform_double", testXorshift_uniform_double),
+        ("testXorshift_normal_float", testXorshift_normal_float),
+        ("testXorshift_normal_double", testXorshift_normal_double),
+        ("testXorshift_normal_no_accelerate_float", testXorshift_normal_no_accelerate_float),
+        ("testXorshift_normal_no_accelerate_double", testXorshift_normal_no_accelerate_double),
+    ]
 }
