@@ -5,11 +5,10 @@ extension Uniform where Base == XorshiftGenerator {
     
     mutating func fill_generic<T: FloatDouble>(start: UnsafeMutablePointer<T>, count: Int, with range: Range<T>) {
         precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
-        T.fill12(start: start,
-                 count: count,
-                 multiplier: range.upperBound - range.lowerBound,
-                 adder: 2*range.lowerBound - range.upperBound,
-                 x: &base.x, y: &base.y, z: &base.z, w: &base.w)
+        T.fill(start: start,
+               count: count,
+               range: range,
+               x: &base.x, y: &base.y, z: &base.z, w: &base.w)
     }
     
     // MARK: Float

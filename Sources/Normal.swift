@@ -23,16 +23,14 @@ extension Normal where Base == XorshiftGenerator {
         // First half: sigma*sqrt(-2log(X))*sin(Y) + mu
         // Last half: sigma*sqrt(-2log(X))*cos(Y) + mu
         
-        // (0, 1]
-        // FIXME: should generate from (0, 1) so distribution is slightly biased.
-        // at least it won't calculate log(0).
-        T.fill12(start: start, count: half, multiplier: -1, adder: 2,
-                 x: &base.x, y: &base.y, z: &base.z, w: &base.w)
+        // (0, 1)
+        T.fill(start: start, count: half, range: .leastNonzeroMagnitude..<1,
+               x: &base.x, y: &base.y, z: &base.z, w: &base.w)
         
         var sincosbuf = [T](repeating: 0, count: half*2)
-        // [2pi, 4pi) (identical to [0, 2pi) in sin/cos)
-        T.fill12(start: &sincosbuf, count: half, multiplier: 2*T.pi, adder: 0,
-                 x: &base.x, y: &base.y, z: &base.z, w: &base.w)
+        // (0, 2pi)
+        T.fill(start: &sincosbuf, count: half, range: .leastNonzeroMagnitude..<2*T.pi,
+               x: &base.x, y: &base.y, z: &base.z, w: &base.w)
         
         // sigma*sqrt(-2*log(X))
         T.vlog(start, start, &__half)
@@ -73,20 +71,20 @@ extension Normal where Base == XorshiftGenerator {
         let minus2sigma2 = -2*sigma*sigma
         let half = (count+1)/2
         
-        // (0, 1]
+        // (0, 1)
         var rp = start
-        T.fill12(start: rp, count: half, multiplier: -1, adder: 2,
-                 x: &base.x, y: &base.y, z: &base.z, w: &base.w)
+        T.fill(start: rp, count: half, range: .leastNonzeroMagnitude..<1,
+               x: &base.x, y: &base.y, z: &base.z, w: &base.w)
         
-        // [2pi, 4pi) (identical to [0, 2pi) in sin/cos)
+        // (0, 2pi)
         var tp = start + half
-        T.fill12(start: tp, count: count-half, multiplier: 2*T.pi, adder: 0,
-                 x: &base.x, y: &base.y, z: &base.z, w: &base.w)
+        T.fill(start: tp, count: count-half, range: .leastNonzeroMagnitude..<2*T.pi,
+               x: &base.x, y: &base.y, z: &base.z, w: &base.w)
         
         if count%2 != 0 {
             var t: T = 0
-            T.fill12(start: &t, count: 1, multiplier: 2*T.pi, adder: 0,
-                     x: &base.x, y: &base.y, z: &base.z, w: &base.w)
+            T.fill(start: &t, count: 1, range: .leastNonzeroMagnitude..<2*T.pi,
+                   x: &base.x, y: &base.y, z: &base.z, w: &base.w)
             rp.pointee = sqrt(minus2sigma2 * .log(rp.pointee)) * .sin(t) + mu
             rp += 1
         }
