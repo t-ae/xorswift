@@ -24,6 +24,8 @@ extension Normal where Base == XorshiftGenerator {
         // Last half: sigma*sqrt(-2log(X))*cos(Y) + mu
         
         // (0, 1]
+        // FIXME: should generate from (0, 1) so distribution is slightly biased.
+        // at least it won't calculate log(0).
         T.fill12(start: start, count: half, multiplier: -1, adder: 2,
                  x: &base.x, y: &base.y, z: &base.z, w: &base.w)
         
