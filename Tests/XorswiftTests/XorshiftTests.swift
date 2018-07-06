@@ -127,7 +127,7 @@ class XorshiftTests: XCTestCase {
             
             let mean = a.reduce(0, +) / T(a.count)
             let mean2: T = a.map { $0*$0 }.reduce(0, +) / T(a.count)
-            let variance = mean2 - mean*mean
+            let variance = (mean2 - mean*mean) * T(count) / T(count - 1)
             
             XCTAssertEqual(mean, -1, accuracy: 1e-2)
             XCTAssertEqual(variance, 0.5*0.5, accuracy: 1e-2)
@@ -139,7 +139,7 @@ class XorshiftTests: XCTestCase {
             
             let mean = a.reduce(0, +) / T(a.count)
             let mean2: T = a.map { $0*$0 }.reduce(0, +) / T(a.count)
-            let variance = mean2 - mean*mean
+            let variance = (mean2 - mean*mean) * T(count) / T(count - 1)
             
             XCTAssertEqual(mean, -1, accuracy: 1e-2)
             XCTAssertEqual(variance, 0.5*0.5, accuracy: 1e-2)
@@ -172,7 +172,7 @@ class XorshiftTests: XCTestCase {
             
             let mean = a.reduce(0, +) / T(a.count)
             let mean2: T = a.map { $0*$0 }.reduce(0, +) / T(a.count)
-            let variance = mean2 - mean*mean
+            let variance = (mean2 - mean*mean) * T(count) / T(count - 1)
             
             XCTAssertEqual(mean, -1, accuracy: 1e-2)
             XCTAssertEqual(variance, 0.5*0.5, accuracy: 1e-2)
@@ -184,7 +184,7 @@ class XorshiftTests: XCTestCase {
             
             let mean = a.reduce(0, +) / T(a.count)
             let mean2: T = a.map { $0*$0 }.reduce(0, +) / T(a.count)
-            let variance = mean2 - mean*mean
+            let variance = (mean2 - mean*mean) * T(count) / T(count - 1)
             
             XCTAssertEqual(mean, -1, accuracy: 1e-2)
             XCTAssertEqual(variance, 0.5*0.5, accuracy: 1e-2)
@@ -217,7 +217,7 @@ class XorshiftTests: XCTestCase {
             
             let mean = a.reduce(0, +) / T(a.count)
             let mean2: T = a.map { $0*$0 }.reduce(0, +) / T(a.count)
-            let variance = mean2 - mean*mean
+            let variance = (mean2 - mean*mean) * T(count) / T(count - 1)
             
             XCTAssertEqual(mean, -1, accuracy: 1e-2)
             XCTAssertEqual(variance, 0.5*0.5, accuracy: 1e-2)
@@ -250,7 +250,7 @@ class XorshiftTests: XCTestCase {
             
             let mean = a.reduce(0, +) / T(a.count)
             let mean2: T = a.map { $0*$0 }.reduce(0, +) / T(a.count)
-            let variance = mean2 - mean*mean
+            let variance = (mean2 - mean*mean) * T(count) / T(count - 1)
             
             XCTAssertEqual(mean, -1, accuracy: 1e-2)
             XCTAssertEqual(variance, 0.5*0.5, accuracy: 1e-2)
