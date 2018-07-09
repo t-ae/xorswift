@@ -37,6 +37,7 @@ protocol FloatDouble: FloatingPoint {
     
     #endif
     
+    /// Sample from range
     static func fill(start: UnsafeMutablePointer<Self>,
                      count: Int,
                      range: Range<Self>,
@@ -44,6 +45,15 @@ protocol FloatDouble: FloatingPoint {
                      y: inout UInt32,
                      z: inout UInt32,
                      w: inout UInt32)
+    
+    /// Sample from (0, high)
+    static func fillOpen(start: UnsafeMutablePointer<Self>,
+                         count: Int,
+                         high: Self,
+                         x: inout UInt32,
+                         y: inout UInt32,
+                         z: inout UInt32,
+                         w: inout UInt32)
     
 }
 
@@ -118,6 +128,29 @@ extension Float: FloatDouble {
             p += 1
         }
     }
+    
+    static func fillOpen(start: UnsafeMutablePointer<Float>,
+                         count: Int,
+                         high: Float,
+                         x: inout UInt32,
+                         y: inout UInt32,
+                         z: inout UInt32,
+                         w: inout UInt32) {
+        
+        var p = start
+        
+        let multiplier = high * .ulpOfOne/2
+        
+        for _ in 0..<count {
+            repeat {
+                let t = x ^ (x << 11)
+                x = y; y = z; z = w;
+                w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))
+                p.pointee = Float(w>>8) * multiplier
+            } while p.pointee == high || p.pointee == 0
+            p += 1
+        }
+    }
 }
 
 extension Double: FloatDouble {
@@ -189,6 +222,30 @@ extension Double: FloatDouble {
                 w = (y ^ (y >> 19)) ^ (t2 ^ (t2 >> 8))
                 p.pointee = Double(UInt64(z<<11)<<21 | UInt64(w)) * multiplier + range.lowerBound
             } while p.pointee == range.upperBound
+            p += 1
+        }
+    }
+    
+    static func fillOpen(start: UnsafeMutablePointer<Double>,
+                         count: Int,
+                         high: Double,
+                         x: inout UInt32,
+                         y: inout UInt32,
+                         z: inout UInt32,
+                         w: inout UInt32) {
+        var p = start
+        
+        let multiplier = high * .ulpOfOne/2
+        
+        for _ in 0..<count {
+            repeat {
+                let t1 = x ^ (x << 11)
+                let t2 = y ^ (y << 11)
+                x = z; y = w;
+                z = (x ^ (x >> 19)) ^ (t1 ^ (t1 >> 8))
+                w = (y ^ (y >> 19)) ^ (t2 ^ (t2 >> 8))
+                p.pointee = Double(UInt64(z<<11)<<21 | UInt64(w)) * multiplier
+            } while p.pointee == high || p.pointee == 0
             p += 1
         }
     }

@@ -24,13 +24,13 @@ extension Normal where Base == XorshiftGenerator {
         // Last half: sigma*sqrt(-2log(X))*cos(Y) + mu
         
         // (0, 1)
-        T.fill(start: start, count: half, range: .leastNonzeroMagnitude..<1,
-               x: &base.x, y: &base.y, z: &base.z, w: &base.w)
+        T.fillOpen(start: start, count: half, high: 1,
+                   x: &base.x, y: &base.y, z: &base.z, w: &base.w)
         
         var sincosbuf = [T](repeating: 0, count: half*2)
         // (0, 2pi)
-        T.fill(start: &sincosbuf, count: half, range: .leastNonzeroMagnitude..<2*T.pi,
-               x: &base.x, y: &base.y, z: &base.z, w: &base.w)
+        T.fillOpen(start: &sincosbuf, count: half, high: 2*T.pi,
+                   x: &base.x, y: &base.y, z: &base.z, w: &base.w)
         
         // sigma*sqrt(-2*log(X))
         T.vlog(start, start, &__half)
@@ -73,18 +73,18 @@ extension Normal where Base == XorshiftGenerator {
         
         // (0, 1)
         var rp = start
-        T.fill(start: rp, count: half, range: .leastNonzeroMagnitude..<1,
-               x: &base.x, y: &base.y, z: &base.z, w: &base.w)
+        T.fillOpen(start: rp, count: half, high: 1,
+                   x: &base.x, y: &base.y, z: &base.z, w: &base.w)
         
         // (0, 2pi)
         var tp = start + half
-        T.fill(start: tp, count: count-half, range: .leastNonzeroMagnitude..<2*T.pi,
-               x: &base.x, y: &base.y, z: &base.z, w: &base.w)
+        T.fillOpen(start: tp, count: count-half, high: 2*T.pi,
+                   x: &base.x, y: &base.y, z: &base.z, w: &base.w)
         
         if count%2 != 0 {
             var t: T = 0
-            T.fill(start: &t, count: 1, range: .leastNonzeroMagnitude..<2*T.pi,
-                   x: &base.x, y: &base.y, z: &base.z, w: &base.w)
+            T.fillOpen(start: &t, count: 1, high: 2*T.pi,
+                       x: &base.x, y: &base.y, z: &base.z, w: &base.w)
             rp.pointee = sqrt(minus2sigma2 * .log(rp.pointee)) * .sin(t) + mu
             rp += 1
         }
