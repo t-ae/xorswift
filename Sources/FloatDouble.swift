@@ -142,12 +142,14 @@ extension Float: FloatDouble {
         let multiplier = high * .ulpOfOne/2
         
         for _ in 0..<count {
+            var uint32: UInt32 = 0
             repeat {
                 let t = x ^ (x << 11)
                 x = y; y = z; z = w;
                 w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))
-                p.pointee = Float(w>>8) * multiplier
-            } while p.pointee == high || p.pointee == 0
+                uint32 = w >> 8
+            } while uint32 == 0
+            p.pointee = Float(uint32) * multiplier
             p += 1
         }
     }
@@ -238,14 +240,16 @@ extension Double: FloatDouble {
         let multiplier = high * .ulpOfOne/2
         
         for _ in 0..<count {
+            var uint64: UInt64 = 0
             repeat {
                 let t1 = x ^ (x << 11)
                 let t2 = y ^ (y << 11)
                 x = z; y = w;
                 z = (x ^ (x >> 19)) ^ (t1 ^ (t1 >> 8))
                 w = (y ^ (y >> 19)) ^ (t2 ^ (t2 >> 8))
-                p.pointee = Double(UInt64(z<<11)<<21 | UInt64(w)) * multiplier
-            } while p.pointee == high || p.pointee == 0
+                uint64 = UInt64(z<<11)<<21 | UInt64(w)
+            } while uint64 == 0
+            p.pointee = Double(uint64) * multiplier
             p += 1
         }
     }
