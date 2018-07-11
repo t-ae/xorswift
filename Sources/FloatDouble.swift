@@ -8,6 +8,7 @@ protocol FloatDouble: FloatingPoint {
     static func sin(_ arg: Self) -> Self
     static func cos(_ arg: Self) -> Self
     static func log(_ arg: Self) -> Self
+    static func sincospi(_ arg: Self) -> (sin: Self, cos: Self)
     
     #if canImport(Accelerate)
     
@@ -66,6 +67,12 @@ extension Float: FloatDouble {
     }
     static func log(_ arg: Float) -> Float {
         return Foundation.log(arg)
+    }
+    static func sincospi(_ arg: Float) -> (sin: Float, cos: Float) {
+        var sin: Float = 0
+        var cos: Float = 0
+        __sincospif(arg, &sin, &cos)
+        return (sin, cos)
     }
     
     #if canImport(Accelerate)
@@ -164,6 +171,12 @@ extension Double: FloatDouble {
     }
     static func log(_ arg: Double) -> Double {
         return Foundation.log(arg)
+    }
+    static func sincospi(_ arg: Double) -> (sin: Double, cos: Double) {
+        var sin: Double = 0
+        var cos: Double = 0
+        __sincospi(arg, &sin, &cos)
+        return (sin, cos)
     }
     
     #if canImport(Accelerate)

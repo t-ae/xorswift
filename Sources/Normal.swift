@@ -76,22 +76,23 @@ extension Normal where Base == XorshiftGenerator {
         T.fillOpen(start: rp, count: half, high: 1,
                    x: &base.x, y: &base.y, z: &base.z, w: &base.w)
         
-        // (0, 2pi)
+        // (0, 2)
         var tp = start + half
-        T.fillOpen(start: tp, count: count-half, high: 2*T.pi,
+        T.fillOpen(start: tp, count: count-half, high: 2,
                    x: &base.x, y: &base.y, z: &base.z, w: &base.w)
         
         if count%2 != 0 {
             var t: T = 0
-            T.fillOpen(start: &t, count: 1, high: 2*T.pi,
+            T.fillOpen(start: &t, count: 1, high: 1,
                        x: &base.x, y: &base.y, z: &base.z, w: &base.w)
             rp.pointee = sqrt(minus2sigma2 * .log(rp.pointee)) * .sin(t) + mu
             rp += 1
         }
         for _ in 0..<(count-half) {
             let r = sqrt(minus2sigma2 * .log(rp.pointee))
-            rp.pointee = r * .sin(tp.pointee) + mu
-            tp.pointee = r * .cos(tp.pointee) + mu
+            let (sin, cos) = T.sincospi(tp.pointee)
+            rp.pointee = r * sin + mu
+            tp.pointee = r * cos + mu
             rp += 1
             tp += 1
         }
