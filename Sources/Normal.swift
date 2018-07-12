@@ -85,7 +85,7 @@ extension Normal where Base == XorshiftGenerator {
             var t: T = 0
             T.fillOpen(start: &t, count: 1, high: 1,
                        x: &base.x, y: &base.y, z: &base.z, w: &base.w)
-            rp.pointee = sqrt(minus2sigma2 * .log(rp.pointee)) * .sin(t) + mu
+            rp.pointee = sqrt(minus2sigma2 * .log(rp.pointee)) * .sin(.pi*t) + mu
             rp += 1
         }
         for _ in 0..<(count-half) {
