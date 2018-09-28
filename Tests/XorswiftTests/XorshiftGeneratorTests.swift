@@ -4,7 +4,7 @@ import Xorswift
 class XorshiftGeneratorTests: XCTestCase {
 
     func testCoW() {
-        var gen = XorshiftGenerator.default
+        var gen = XorshiftGenerator()
         var gen2 = gen
         
         XCTAssertEqual(gen.next(), gen2.next() as UInt8)

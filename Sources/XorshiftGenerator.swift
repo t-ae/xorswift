@@ -1,7 +1,4 @@
 public struct XorshiftGenerator: RandomNumberGenerator {
-    
-    public static var `default` = XorshiftGenerator()
-    
     public var x: UInt32
     public var y: UInt32
     public var z: UInt32
