@@ -148,7 +148,7 @@ extension XorshiftGenerator {
     }
     /// Sample random numbers from normal distribution N(mu, sigma^2).
     ///
-    /// - Note: This function is slower than `xorshift_normal` with Accelerate framework, but uses less memories.
+    /// - Note: This function is slower than `fillNormal` with Accelerate framework, but uses less memories.
     /// - Precondition:
     ///   - `count` >= 0
     ///   - `sigma` >= 0
@@ -209,7 +209,7 @@ extension XorshiftGenerator {
     }
     /// Sample random numbers from normal distribution N(mu, sigma^2).
     ///
-    /// - Note: This function is slower than `xorshift_normal` with Accelerate framework, but uses less memories.
+    /// - Note: This function is slower than `fillNormal` with Accelerate framework, but uses less memories.
     /// - Precondition:
     ///   - `count` >= 0
     ///   - `sigma` >= 0
