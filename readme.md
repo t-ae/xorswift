@@ -12,19 +12,21 @@ func testPerformance_arc4random() {
         for _ in 0..<100 {
             arc4random_buf(&a, MemoryLayout<UInt32>.size * a.count)
         }
-    } // 0.250 sec
+    } // 0.147sec
 }
+
 func testPerformance_xorshift() {
     let count = 1_000_000
     var a = [UInt32](repeating: 0, count: count)
     measure {
+        var gen = XorshiftGenerator()
         for _ in 0..<100 {
-            xorshift(start: &a, count: a.count)
+            gen.fill(start: &a, count: a.count)
         }
-    } // 0.118 sec
+    } // 0.097sec
 }
 ```
 
 ## Sample from uniform/normal distribution
 
-`xorshift_uniform`/`xorshift_normal` for `Float`/`Double`.
+See [`Uniform.swift`](https://github.com/t-ae/xorswift/blob/master/Sources/Uniform.swift) and [Normal.swift](https://github.com/t-ae/xorswift/blob/master/Sources/Normal.swift).
