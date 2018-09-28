@@ -21,8 +21,9 @@ extension PerformanceTests {
     
     func testPerformance_xorshift_single() {
         measure {
+            var gen = XorshiftGenerator()
             for _ in 0..<10_000_000 {
-                _ = XorshiftGenerator.default.next() as UInt32
+                _ = gen.next() as UInt32
             }
         }
     }
@@ -45,8 +46,9 @@ extension PerformanceTests {
         let count = 1_000_000
         var a = [UInt32](repeating: 0, count: count)
         measure {
+            var gen = XorshiftGenerator()
             for _ in 0..<100 {
-                XorshiftGenerator.default.fill(start: &a, count: a.count)
+                gen.fill(start: &a, count: a.count)
             }
         }
     }
@@ -74,8 +76,9 @@ extension PerformanceTests {
         let count = 1_000_000
         var a = [Float](repeating: 0, count: count)
         measure {
+            var gen = XorshiftGenerator()
             for _ in 0..<100 {
-                XorshiftGenerator.default.fillUniform(start: &a, count: a.count, with: 0..<1)
+                gen.fillUniform(start: &a, count: a.count, with: 0..<1)
             }
         }
     }
@@ -84,8 +87,9 @@ extension PerformanceTests {
         let count = 1_000_000
         var a = [Double](repeating: 0, count: count)
         measure {
+            var gen = XorshiftGenerator()
             for _ in 0..<100 {
-                XorshiftGenerator.default.fillUniform(start: &a, count: a.count, with: 0..<1)
+                gen.fillUniform(start: &a, count: a.count, with: 0..<1)
             }
         }
     }
@@ -97,8 +101,9 @@ extension PerformanceTests {
         let count = 300_000
         var a = [Float](repeating: 0, count: count)
         measure {
+            var gen = XorshiftGenerator()
             for _ in 0..<100 {
-                XorshiftGenerator.default.fillNormal(start: &a, count: a.count, mu: 0, sigma: 1)
+                gen.fillNormal(start: &a, count: a.count, mu: 0, sigma: 1)
             }
         }
     }
@@ -108,8 +113,9 @@ extension PerformanceTests {
         let count = 300_000
         var a = [Float](repeating: 0, count: count)
         measure {
+            var gen = XorshiftGenerator()
             for _ in 0..<100 {
-                XorshiftGenerator.default.fillNormal_no_accelerate(start: &a, count: a.count, mu: 0, sigma: 1)
+                gen.fillNormal_no_accelerate(start: &a, count: a.count, mu: 0, sigma: 1)
             }
         }
     }
@@ -121,8 +127,9 @@ extension PerformanceTests {
         let count = 300_000
         var a = [Double](repeating: 0, count: count)
         measure {
+            var gen = XorshiftGenerator()
             for _ in 0..<100 {
-                XorshiftGenerator.default.fillNormal(start: &a, count: a.count, mu: 0, sigma: 1)
+                gen.fillNormal(start: &a, count: a.count, mu: 0, sigma: 1)
             }
         }
     }
@@ -132,8 +139,9 @@ extension PerformanceTests {
         let count = 300_000
         var a = [Double](repeating: 0, count: count)
         measure {
+            var gen = XorshiftGenerator()
             for _ in 0..<100 {
-                XorshiftGenerator.default.fillNormal_no_accelerate(start: &a, count: a.count, mu: 0, sigma: 1)
+                gen.fillNormal_no_accelerate(start: &a, count: a.count, mu: 0, sigma: 1)
             }
         }
     }

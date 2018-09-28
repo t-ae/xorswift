@@ -1,15 +1,7 @@
 {
   "object": {
     "pins": [
-      {
-        "package": "RNGExtension",
-        "repositoryURL": "https://github.com/t-ae/rng-extension.git",
-        "state": {
-          "branch": null,
-          "revision": "dcaf24002b37dcc4ac6d187d10a57eda1a99e160",
-          "version": "1.1.0-alpha.6"
-        }
-      }
+
     ]
   },
   "version": 1
