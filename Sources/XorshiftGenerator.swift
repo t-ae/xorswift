@@ -4,20 +4,26 @@ public struct XorshiftGenerator: RandomNumberGenerator {
     public var z: UInt32
     public var w: UInt32
     
-    public init() {
-        var g = SystemRandomNumberGenerator()
-        self.init(x: g.next(),
-                  y: g.next(),
-                  z: g.next(),
-                  w: g.next())
-    }
-    
     public init(x: UInt32, y: UInt32, z: UInt32, w: UInt32) {
         self.x = x
         self.y = y
         self.z = z
         self.w = w
     }
+    
+    public init<G: RandomNumberGenerator>(using generator: inout G) {
+        self.init(x: generator.next(),
+                  y: generator.next(),
+                  z: generator.next(),
+                  w: generator.next())
+    }
+    
+    public init() {
+        var g = SystemRandomNumberGenerator()
+        self.init(using: &g)
+    }
+    
+    
     
     /// Generate random UInt32 number.
     public mutating func next() -> UInt32 {
