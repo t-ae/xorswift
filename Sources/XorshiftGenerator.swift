@@ -8,10 +8,11 @@ public struct XorshiftGenerator: RandomNumberGenerator {
     public var w: UInt32
     
     public init() {
-        self.init(x: Random.default.next(),
-                  y: Random.default.next(),
-                  z: Random.default.next(),
-                  w: Random.default.next())
+        var g = SystemRandomNumberGenerator()
+        self.init(x: g.next(),
+                  y: g.next(),
+                  z: g.next(),
+                  w: g.next())
     }
     
     public init(x: UInt32, y: UInt32, z: UInt32, w: UInt32) {
