@@ -12,6 +12,11 @@ class XorshiftGeneratorTests: XCTestCase {
         XCTAssertEqual(gen.next(), gen2.next() as UInt32)
         XCTAssertEqual(gen.next(), gen2.next() as UInt64)
         
+        XCTAssertEqual(Int.random(in: 0..<10, using: &gen), Int.random(in: 0..<10, using: &gen2))
+        XCTAssertEqual(UInt.random(in: 0..<10, using: &gen), UInt.random(in: 0..<10, using: &gen2))
+        XCTAssertEqual(Float.random(in: 0..<10, using: &gen), Float.random(in: 0..<10, using: &gen2))
+        XCTAssertEqual(Double.random(in: 0..<10, using: &gen), Double.random(in: 0..<10, using: &gen2))
+        
         XCTAssertEqual(gen.generateUniform(count: 10), gen2.generateUniform(count: 10) as [Float])
         XCTAssertEqual(gen.generateUniform(count: 10), gen2.generateUniform(count: 10) as [Double])
         XCTAssertEqual(gen.generateNormal(count: 10), gen2.generateNormal(count: 10) as [Float])

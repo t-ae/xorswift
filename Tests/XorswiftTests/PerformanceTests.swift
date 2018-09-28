@@ -7,6 +7,7 @@ import Xorswift
 class PerformanceTests: XCTestCase {
 }
 
+#if !DEBUG
 extension PerformanceTests {
     #if os(macOS)
     func testPerformance_arc4random_single() {
@@ -137,3 +138,4 @@ extension PerformanceTests {
         }
     }
 }
+#endif
