@@ -29,4 +29,4 @@ func testPerformance_xorshift() {
 
 ## Sample from uniform/normal distribution
 
-See [`Uniform.swift`](https://github.com/t-ae/xorswift/blob/master/Sources/Uniform.swift) and [Normal.swift](https://github.com/t-ae/xorswift/blob/master/Sources/Normal.swift).
+See [Uniform.swift](https://github.com/t-ae/xorswift/blob/master/Sources/Uniform.swift) and [Normal.swift](https://github.com/t-ae/xorswift/blob/master/Sources/Normal.swift).
