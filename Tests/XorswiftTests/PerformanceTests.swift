@@ -74,7 +74,7 @@ extension PerformanceTests {
         var a = [Float](repeating: 0, count: count)
         measure {
             for _ in 0..<100 {
-                XorshiftGenerator.default.uniform.fill(start: &a, count: a.count, with: 0..<1)
+                XorshiftGenerator.default.fillUniform(start: &a, count: a.count, with: 0..<1)
             }
         }
     }
@@ -84,7 +84,7 @@ extension PerformanceTests {
         var a = [Double](repeating: 0, count: count)
         measure {
             for _ in 0..<100 {
-                XorshiftGenerator.default.uniform.fill(start: &a, count: a.count, with: 0..<1)
+                XorshiftGenerator.default.fillUniform(start: &a, count: a.count, with: 0..<1)
             }
         }
     }
@@ -97,7 +97,7 @@ extension PerformanceTests {
         var a = [Float](repeating: 0, count: count)
         measure {
             for _ in 0..<100 {
-                XorshiftGenerator.default.normal.fill(start: &a, count: a.count, mu: 0, sigma: 1)
+                XorshiftGenerator.default.fillNormal(start: &a, count: a.count, mu: 0, sigma: 1)
             }
         }
     }
@@ -108,7 +108,7 @@ extension PerformanceTests {
         var a = [Float](repeating: 0, count: count)
         measure {
             for _ in 0..<100 {
-                XorshiftGenerator.default.normal.fill_no_accelerate(start: &a, count: a.count, mu: 0, sigma: 1)
+                XorshiftGenerator.default.fillNormal_no_accelerate(start: &a, count: a.count, mu: 0, sigma: 1)
             }
         }
     }
@@ -121,7 +121,7 @@ extension PerformanceTests {
         var a = [Double](repeating: 0, count: count)
         measure {
             for _ in 0..<100 {
-                XorshiftGenerator.default.normal.fill(start: &a, count: a.count, mu: 0, sigma: 1)
+                XorshiftGenerator.default.fillNormal(start: &a, count: a.count, mu: 0, sigma: 1)
             }
         }
     }
@@ -132,7 +132,7 @@ extension PerformanceTests {
         var a = [Double](repeating: 0, count: count)
         measure {
             for _ in 0..<100 {
-                XorshiftGenerator.default.normal.fill_no_accelerate(start: &a, count: a.count, mu: 0, sigma: 1)
+                XorshiftGenerator.default.fillNormal_no_accelerate(start: &a, count: a.count, mu: 0, sigma: 1)
             }
         }
     }
