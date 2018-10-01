@@ -126,14 +126,49 @@ extension Float: FloatDouble {
         precondition(multiplier.isFinite, "There is no uniform distribution on an infinite range")
         
         var p = start
+        let end = start + count
         for _ in 0..<count {
-            repeat {
-                let t = x ^ (x << 11)
-                x = y; y = z; z = w;
-                w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))
-                p.pointee = Float(w>>8) * multiplier + range.lowerBound
-            } while p.pointee == range.upperBound
-            p += 1
+            let t1 = x ^ (x << 11)
+            let t2 = y ^ (y << 11)
+            let t3 = z ^ (z << 11)
+            let t4 = w ^ (w << 11)
+            
+            w = w ^ (w >> 19) ^ (t1 ^ (t1 >> 8))
+            x = x ^ (x >> 19) ^ (t2 ^ (t2 >> 8))
+            y = y ^ (y >> 19) ^ (t3 ^ (t3 >> 8))
+            z = z ^ (z >> 19) ^ (t4 ^ (t4 >> 8))
+            
+            p.pointee = Float(w>>8) * multiplier + range.lowerBound
+            if(p.pointee < range.upperBound) {
+                p += 1
+                if p == end {
+                    return
+                }
+            }
+            
+            p.pointee = Float(x>>8) * multiplier + range.lowerBound
+            if(p.pointee < range.upperBound) {
+                p += 1
+                if p == end {
+                    return
+                }
+            }
+            
+            p.pointee = Float(y>>8) * multiplier + range.lowerBound
+            if(p.pointee < range.upperBound) {
+                p += 1
+                if p == end {
+                    return
+                }
+            }
+            
+            p.pointee = Float(z>>8) * multiplier + range.lowerBound
+            if(p.pointee < range.upperBound) {
+                p += 1
+                if p == end {
+                    return
+                }
+            }
         }
     }
     
@@ -144,21 +179,55 @@ extension Float: FloatDouble {
                          y: inout UInt32,
                          z: inout UInt32,
                          w: inout UInt32) {
-        
-        var p = start
+        assert(high > 0)
         
         let multiplier = high * .ulpOfOne/2
+        assert(multiplier.isFinite)
         
+        var p = start
+        let end = start + count
         for _ in 0..<count {
-            var uint32: UInt32 = 0
-            repeat {
-                let t = x ^ (x << 11)
-                x = y; y = z; z = w;
-                w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))
-                uint32 = w >> 8
-            } while uint32 == 0
-            p.pointee = Float(uint32) * multiplier
-            p += 1
+            let t1 = x ^ (x << 11)
+            let t2 = y ^ (y << 11)
+            let t3 = z ^ (z << 11)
+            let t4 = w ^ (w << 11)
+            
+            w = w ^ (w >> 19) ^ (t1 ^ (t1 >> 8))
+            x = x ^ (x >> 19) ^ (t2 ^ (t2 >> 8))
+            y = y ^ (y >> 19) ^ (t3 ^ (t3 >> 8))
+            z = z ^ (z >> 19) ^ (t4 ^ (t4 >> 8))
+            
+            p.pointee = Float(w>>8) * multiplier
+            if(p.pointee > 0) {
+                p += 1
+                if p == end {
+                    return
+                }
+            }
+            
+            p.pointee = Float(x>>8) * multiplier
+            if(p.pointee > 0) {
+                p += 1
+                if p == end {
+                    return
+                }
+            }
+            
+            p.pointee = Float(y>>8) * multiplier
+            if(p.pointee > 0) {
+                p += 1
+                if p == end {
+                    return
+                }
+            }
+            
+            p.pointee = Float(z>>8) * multiplier
+            if(p.pointee > 0) {
+                p += 1
+                if p == end {
+                    return
+                }
+            }
         }
     }
 }
