@@ -120,11 +120,12 @@ extension Float: FloatDouble {
                      y: inout UInt32,
                      z: inout UInt32,
                      w: inout UInt32) {
-        
-        var p = start
+        precondition(!range.isEmpty, "Can't get random value with an empty range")
         
         let multiplier = (range.upperBound - range.lowerBound) * .ulpOfOne/2
+        precondition(multiplier.isFinite, "There is no uniform distribution on an infinite range")
         
+        var p = start
         for _ in 0..<count {
             repeat {
                 let t = x ^ (x << 11)
@@ -224,10 +225,12 @@ extension Double: FloatDouble {
                      y: inout UInt32,
                      z: inout UInt32,
                      w: inout UInt32) {
-        var p = start
+        precondition(!range.isEmpty, "Can't get random value with an empty range")
         
         let multiplier = (range.upperBound - range.lowerBound) * .ulpOfOne/2
+        precondition(multiplier.isFinite, "There is no uniform distribution on an infinite range")
         
+        var p = start
         for _ in 0..<count {
             repeat {
                 let t1 = x ^ (x << 11)
