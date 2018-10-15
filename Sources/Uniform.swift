@@ -2,7 +2,6 @@ import Foundation
 
 extension XorshiftGenerator {
     // MARK: Generic
-    
     mutating func fillUniform_generic<T: FloatDouble>(start: UnsafeMutablePointer<T>, count: Int, with range: Range<T>) {
         precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
         T.fill(start: start,

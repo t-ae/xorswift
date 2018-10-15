@@ -31,7 +31,6 @@ class XorshiftGeneratorTests: XCTestCase {
     
     func testInnerState() {
         var g = XorshiftGenerator()
-        
         var g2 = g
         
         _ = g.next() as UInt32
@@ -57,8 +56,20 @@ class XorshiftGeneratorTests: XCTestCase {
         XCTAssertEqual(g, g2)
     }
     
+    func testCompatibilityWithStdlib() {
+        var g = XorshiftGenerator()
+        var g2 = g
+        
+        let xor = g.generateUniform(count: 100, from: 0..<1) as [Double]
+        let std = (0..<100).map { _ in Double.random(in: 0..<1, using: &g2) }
+        
+        XCTAssertEqual(xor, std)
+        XCTAssertEqual(g, g2)
+    }
+    
     static let allTests = [
-        ("testCoW", testCoW)
+        ("testCoW", testCoW),
+        ("testInnerState", testInnerState)
     ]
 }
 
