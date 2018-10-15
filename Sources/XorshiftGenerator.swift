@@ -36,8 +36,8 @@ public struct XorshiftGenerator: RandomNumberGenerator {
         let t1 = x ^ (x << 11)
         let t2 = y ^ (y << 11)
         x = z; y = w;
-        z = (x ^ (x >> 19)) ^ (t1 ^ (t1 >> 8))
-        w = (y ^ (y >> 19)) ^ (t2 ^ (t2 >> 8))
+        z = (w ^ (w >> 19)) ^ (t1 ^ (t1 >> 8))
+        w = (z ^ (z >> 19)) ^ (t2 ^ (t2 >> 8))
         return UInt64(z) << 32 | UInt64(w)
     }
     

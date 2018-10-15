@@ -29,7 +29,41 @@ class XorshiftGeneratorTests: XCTestCase {
         XCTAssertEqual(a1, a2)
     }
     
+    func testInnerState() {
+        var g = XorshiftGenerator()
+        
+        var g2 = g
+        
+        _ = g.next() as UInt32
+        _ = g.next() as UInt32
+        _ = g2.next() as UInt64
+        
+        XCTAssertEqual(g, g2)
+        
+        for _ in 0..<4 { _ = g.next() as UInt32 }
+        _ = g2.generateUniform(count: 4, from: 0..<1) as [Float]
+        
+        XCTAssertEqual(g, g2)
+        
+        // generateUniform generates 4n random numbers internally
+        for _ in 0..<8 { _ = g.next() as UInt32 }
+        _ = g2.generateUniform(count: 5, from: 0..<1) as [Float]
+        
+        XCTAssertEqual(g, g2)
+        
+        _ = g.generateUniform(count: 10, from: 0..<1) as [Float]
+        _ = g2.generateUniform(count: 5, from: 0..<1) as [Double]
+        
+        XCTAssertEqual(g, g2)
+    }
+    
     static let allTests = [
         ("testCoW", testCoW)
     ]
+}
+
+extension XorshiftGenerator: Equatable {
+    public static func ==(lhs: XorshiftGenerator, rhs: XorshiftGenerator) -> Bool {
+        return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z && lhs.w == rhs.w
+    }
 }

@@ -133,10 +133,10 @@ extension Float: FloatDouble {
             let t3 = z ^ (z << 11)
             let t4 = w ^ (w << 11)
             
-            w = w ^ (w >> 19) ^ (t1 ^ (t1 >> 8))
-            x = x ^ (x >> 19) ^ (t2 ^ (t2 >> 8))
-            y = y ^ (y >> 19) ^ (t3 ^ (t3 >> 8))
-            z = z ^ (z >> 19) ^ (t4 ^ (t4 >> 8))
+            x = w ^ (w >> 19) ^ (t1 ^ (t1 >> 8))
+            y = x ^ (x >> 19) ^ (t2 ^ (t2 >> 8))
+            z = y ^ (y >> 19) ^ (t3 ^ (t3 >> 8))
+            w = z ^ (z >> 19) ^ (t4 ^ (t4 >> 8))
             
             p.pointee = Float(w>>8) * multiplier + range.lowerBound
             if(p.pointee < range.upperBound) {
@@ -192,10 +192,10 @@ extension Float: FloatDouble {
             let t3 = z ^ (z << 11)
             let t4 = w ^ (w << 11)
             
-            w = w ^ (w >> 19) ^ (t1 ^ (t1 >> 8))
-            x = x ^ (x >> 19) ^ (t2 ^ (t2 >> 8))
-            y = y ^ (y >> 19) ^ (t3 ^ (t3 >> 8))
-            z = z ^ (z >> 19) ^ (t4 ^ (t4 >> 8))
+            x = w ^ (w >> 19) ^ (t1 ^ (t1 >> 8))
+            y = x ^ (x >> 19) ^ (t2 ^ (t2 >> 8))
+            z = y ^ (y >> 19) ^ (t3 ^ (t3 >> 8))
+            w = z ^ (z >> 19) ^ (t4 ^ (t4 >> 8))
             
             p.pointee = Float(w>>8) * multiplier
             if(p.pointee > 0) {
@@ -307,10 +307,10 @@ extension Double: FloatDouble {
             let t3 = z ^ (z << 11)
             let t4 = w ^ (w << 11)
             
-            w = w ^ (w >> 19) ^ (t1 ^ (t1 >> 8))
-            x = x ^ (x >> 19) ^ (t2 ^ (t2 >> 8))
-            y = y ^ (y >> 19) ^ (t3 ^ (t3 >> 8))
-            z = z ^ (z >> 19) ^ (t4 ^ (t4 >> 8))
+            x = w ^ (w >> 19) ^ (t1 ^ (t1 >> 8))
+            y = x ^ (x >> 19) ^ (t2 ^ (t2 >> 8))
+            z = y ^ (y >> 19) ^ (t3 ^ (t3 >> 8))
+            w = z ^ (z >> 19) ^ (t4 ^ (t4 >> 8))
             
             p.pointee = Double(UInt64(x<<11)<<21 | UInt64(y)) * multiplier + range.lowerBound
             if p.pointee < range.upperBound {
@@ -350,10 +350,10 @@ extension Double: FloatDouble {
             let t3 = z ^ (z << 11)
             let t4 = w ^ (w << 11)
             
-            w = w ^ (w >> 19) ^ (t1 ^ (t1 >> 8))
-            x = x ^ (x >> 19) ^ (t2 ^ (t2 >> 8))
-            y = y ^ (y >> 19) ^ (t3 ^ (t3 >> 8))
-            z = z ^ (z >> 19) ^ (t4 ^ (t4 >> 8))
+            x = w ^ (w >> 19) ^ (t1 ^ (t1 >> 8))
+            y = x ^ (x >> 19) ^ (t2 ^ (t2 >> 8))
+            z = y ^ (y >> 19) ^ (t3 ^ (t3 >> 8))
+            w = z ^ (z >> 19) ^ (t4 ^ (t4 >> 8))
             
             p.pointee = Double(UInt64(x<<11)<<21 | UInt64(y)) * multiplier
             if p.pointee > 0 {
