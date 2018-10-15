@@ -23,8 +23,6 @@ public struct XorshiftGenerator: RandomNumberGenerator {
         self.init(using: &g)
     }
     
-    
-    
     /// Generate random UInt32 number.
     public mutating func next() -> UInt32 {
         let t = x ^ (x << 11)
