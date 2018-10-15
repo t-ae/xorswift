@@ -16,10 +16,15 @@ public struct XorshiftGenerator: RandomNumberGenerator {
     
     /// Create `XorshiftGenerator` seeded with `generator`.
     public init<G: RandomNumberGenerator>(using generator: inout G) {
-        self.init(x: generator.next(),
-                  y: generator.next(),
-                  z: generator.next(),
-                  w: generator.next())
+        var x, y, z, w: UInt32
+        repeat {
+            x = generator.next()
+            y = generator.next()
+            z = generator.next()
+            w = generator.next()
+        } while x == 0 && y == 0 && z == 0 && w == 0
+        
+        self.init(x: x, y: y, z: z, w: w)
     }
     
     /// Create `XorshiftGenerator` seeded with `SystemRandomNumberGenerator`.
