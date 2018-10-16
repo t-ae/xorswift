@@ -27,6 +27,24 @@ extension PerformanceTests {
             }
         }
     }
+    
+    func testPerformance_xorshift_single64() {
+        measure {
+            var gen = XorshiftGenerator()
+            for _ in 0..<10_000_000 {
+                _ = gen.next() as UInt64
+            }
+        }
+    }
+    
+    func testPerformance_xorshift_plus_single64() {
+        measure {
+            var gen = XorshiftPlusGenerator()
+            for _ in 0..<10_000_000 {
+                _ = gen.next() as UInt64
+            }
+        }
+    }
 }
 
 extension PerformanceTests {

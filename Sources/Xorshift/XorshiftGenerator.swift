@@ -1,3 +1,6 @@
+/// Xorshift pseudorandom number generator.
+/// - Note: Original paper.
+///         https://www.jstatsoft.org/index.php/jss/article/view/v008i14/xorshift.pdf
 public struct XorshiftGenerator: RandomNumberGenerator {
     public var x: UInt32
     public var y: UInt32
