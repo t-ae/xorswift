@@ -69,10 +69,7 @@ extension Float: FloatDouble {
         return Foundation.log(arg)
     }
     static func sincospi(_ arg: Float) -> (sin: Float, cos: Float) {
-        var sin: Float = 0
-        var cos: Float = 0
-        __sincospif(arg, &sin, &cos)
-        return (sin, cos)
+        return (sinf(arg * .pi), cosf(arg * .pi))
     }
     
     #if canImport(Accelerate)
@@ -243,10 +240,7 @@ extension Double: FloatDouble {
         return Foundation.log(arg)
     }
     static func sincospi(_ arg: Double) -> (sin: Double, cos: Double) {
-        var sin: Double = 0
-        var cos: Double = 0
-        __sincospi(arg, &sin, &cos)
-        return (sin, cos)
+        return (sin(arg * .pi), cos(arg * .pi))
     }
     
     #if canImport(Accelerate)
