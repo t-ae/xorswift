@@ -3,7 +3,9 @@ import Foundation
 extension XorshiftGenerator {
     // MARK: Generic
     @inlinable
-    mutating func fillUniform_generic<T: FloatDouble>(start: UnsafeMutablePointer<T>, count: Int, with range: Range<T>) {
+    mutating func fillUniform_generic<T: FloatDouble>(start: UnsafeMutablePointer<T>,
+                                                      count: Int,
+                                                      with range: Range<T>) {
         precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
         T.fill(start: start,
                count: count,
@@ -20,7 +22,8 @@ extension XorshiftGenerator {
     /// - Precondition:
     ///   - `count` >= 0
     @inlinable
-    public mutating func generateUniform(count: Int, from range: Range<Float> = 0..<1) -> [Float] {
+    public mutating func generateUniform(count: Int,
+                                         from range: Range<Float> = 0..<1) -> [Float] {
         var array = [Float](repeating: 0, count: count)
         fillUniform(&array, with: range)
         return array
@@ -31,7 +34,8 @@ extension XorshiftGenerator {
     ///   - array: Array to fill
     ///   - range: Range of uniform distribution, default: 0..<1
     @inlinable
-    public mutating func fillUniform(_ array: inout [Float], with range: Range<Float> = 0..<1) {
+    public mutating func fillUniform(_ array: inout [Float],
+                                     with range: Range<Float> = 0..<1) {
         array.withUnsafeMutableBufferPointer {
             fillUniform($0, with: range)
         }
@@ -42,7 +46,8 @@ extension XorshiftGenerator {
     ///   - buffer: BufferPointer to fill
     ///   - range: Range of uniform distribution, default: 0..<1
     @inlinable
-    public mutating func fillUniform(_ buffer: UnsafeMutableBufferPointer<Float>, with range: Range<Float> = 0..<1) {
+    public mutating func fillUniform(_ buffer: UnsafeMutableBufferPointer<Float>,
+                                     with range: Range<Float> = 0..<1) {
         buffer.baseAddress.map {
             fillUniform(start: $0, count: buffer.count, with: range)
         }
@@ -72,7 +77,8 @@ extension XorshiftGenerator {
     /// - Precondition:
     ///   - `count` >= 0
     @inlinable
-    public mutating func generateUniform(count: Int, from range: Range<Double> = 0..<1) -> [Double] {
+    public mutating func generateUniform(count: Int,
+                                         from range: Range<Double> = 0..<1) -> [Double] {
         var array = [Double](repeating: 0, count: count)
         fillUniform(&array, with: range)
         return array
@@ -83,7 +89,8 @@ extension XorshiftGenerator {
     ///   - array: Array to fill
     ///   - range: Range of uniform distribution, default: 0..<1
     @inlinable
-    public mutating func fillUniform(_ array: inout [Double], with range: Range<Double> = 0..<1) {
+    public mutating func fillUniform(_ array: inout [Double],
+                                     with range: Range<Double> = 0..<1) {
         array.withUnsafeMutableBufferPointer {
             fillUniform($0, with: range)
         }
@@ -94,7 +101,8 @@ extension XorshiftGenerator {
     ///   - buffer: BufferPointer to fill
     ///   - range: Range of uniform distribution, default: 0..<1
     @inlinable
-    public mutating func fillUniform(_ buffer: UnsafeMutableBufferPointer<Double>, with range: Range<Double> = 0..<1) {
+    public mutating func fillUniform(_ buffer: UnsafeMutableBufferPointer<Double>,
+                                     with range: Range<Double> = 0..<1) {
         buffer.baseAddress.map {
             fillUniform(start: $0, count: buffer.count, with: range)
         }
@@ -109,8 +117,8 @@ extension XorshiftGenerator {
     ///   - `count` >= 0
     @inlinable
     public mutating func fillUniform(start: UnsafeMutablePointer<Double>,
-                                    count: Int,
-                                    with range: Range<Double> = 0..<1) {
+                                     count: Int,
+                                     with range: Range<Double> = 0..<1) {
         fillUniform_generic(start: start, count: count, with: range)
     }
 }
