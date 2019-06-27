@@ -18,7 +18,7 @@ public struct XorshiftGenerator: RandomNumberGenerator {
         self.w = w
     }
     
-    /// Create `XorshiftGenerator` seeded with `generator`.
+    /// Create `XorshiftGenerator` seeded with another `generator`.
     @inlinable
     public init<G: RandomNumberGenerator>(using generator: inout G) {
         var x, y, z, w: UInt32
