@@ -4,6 +4,7 @@ import Foundation
 import Accelerate
 #endif
 
+@usableFromInline
 protocol FloatDouble: FloatingPoint {
     static func sin(_ arg: Self) -> Self
     static func cos(_ arg: Self) -> Self
@@ -59,21 +60,26 @@ protocol FloatDouble: FloatingPoint {
 }
 
 extension Float: FloatDouble {
+    @inlinable
     static func sin(_ arg: Float) -> Float {
         return Foundation.sin(arg)
     }
+    @inlinable
     static func cos(_ arg: Float) -> Float {
         return Foundation.cos(arg)
     }
+    @inlinable
     static func log(_ arg: Float) -> Float {
         return Foundation.log(arg)
     }
+    @inlinable
     static func sincospi(_ arg: Float) -> (sin: Float, cos: Float) {
         return (sinf(arg * .pi), cosf(arg * .pi))
     }
     
     #if canImport(Accelerate)
     
+    @inlinable
     static func vsincos(_ sinOut: UnsafeMutablePointer<Float>,
                         _ cosOut: UnsafeMutablePointer<Float>,
                         _ input: UnsafePointer<Float>,
@@ -81,18 +87,21 @@ extension Float: FloatDouble {
         vvsincosf(sinOut, cosOut, input, count)
     }
     
+    @inlinable
     static func vlog(_ output: UnsafeMutablePointer<Float>,
                      _ input: UnsafePointer<Float>,
                      _ count: UnsafePointer<Int32>) {
         vvlogf(output, input, count)
     }
     
+    @inlinable
     static func vsqrt(_ output: UnsafeMutablePointer<Float>,
                       _ input: UnsafePointer<Float>,
                       _ count: UnsafePointer<Int32>) {
         vvsqrtf(output, input, count)
     }
     
+    @inlinable
     static func vmsa(_ input: UnsafePointer<Float>,
                      _ multiplier: UnsafePointer<Float>,
                      _ adder: UnsafePointer<Float>,
@@ -101,6 +110,7 @@ extension Float: FloatDouble {
         vDSP_vmsa(input, 1, multiplier, 1, adder, output, 1, count)
     }
     
+    @inlinable
     static func vsmul(_ input: UnsafePointer<Float>,
                       _ multiplier: UnsafePointer<Float>,
                       _ output: UnsafeMutablePointer<Float>,
@@ -110,6 +120,7 @@ extension Float: FloatDouble {
     
     #endif
     
+    @inlinable
     static func fill(start: UnsafeMutablePointer<Float>,
                      count: Int,
                      range: Range<Float>,
@@ -169,6 +180,7 @@ extension Float: FloatDouble {
         }
     }
     
+    @inlinable
     static func fillOpen(start: UnsafeMutablePointer<Float>,
                          count: Int,
                          high: Float,
@@ -230,21 +242,26 @@ extension Float: FloatDouble {
 }
 
 extension Double: FloatDouble {
+    @inlinable
     static func sin(_ arg: Double) -> Double {
         return Foundation.sin(arg)
     }
+    @inlinable
     static func cos(_ arg: Double) -> Double {
         return Foundation.cos(arg)
     }
+    @inlinable
     static func log(_ arg: Double) -> Double {
         return Foundation.log(arg)
     }
+    @inlinable
     static func sincospi(_ arg: Double) -> (sin: Double, cos: Double) {
         return (sin(arg * .pi), cos(arg * .pi))
     }
     
     #if canImport(Accelerate)
     
+    @inlinable
     static func vsincos(_ sinOut: UnsafeMutablePointer<Double>,
                         _ cosOut: UnsafeMutablePointer<Double>,
                         _ input: UnsafePointer<Double>,
@@ -252,18 +269,21 @@ extension Double: FloatDouble {
         vvsincos(sinOut, cosOut, input, count)
     }
     
+    @inlinable
     static func vlog(_ output: UnsafeMutablePointer<Double>,
                      _ input: UnsafePointer<Double>,
                      _ count: UnsafePointer<Int32>) {
         vvlog(output, input, count)
     }
     
+    @inlinable
     static func vsqrt(_ output: UnsafeMutablePointer<Double>,
                       _ input: UnsafePointer<Double>,
                       _ count: UnsafePointer<Int32>) {
         vvsqrt(output, input, count)
     }
     
+    @inlinable
     static func vmsa(_ input: UnsafePointer<Double>,
                      _ multiplier: UnsafePointer<Double>,
                      _ adder: UnsafePointer<Double>,
@@ -272,6 +292,7 @@ extension Double: FloatDouble {
         vDSP_vmsaD(input, 1, multiplier, 1, adder, output, 1, count)
     }
     
+    @inlinable
     static func vsmul(_ input: UnsafePointer<Double>,
                       _ multiplier: UnsafePointer<Double>,
                       _ output: UnsafeMutablePointer<Double>,
@@ -281,6 +302,7 @@ extension Double: FloatDouble {
     
     #endif
     
+    @inlinable
     static func fill(start: UnsafeMutablePointer<Double>,
                      count: Int,
                      range: Range<Double>,
@@ -324,6 +346,7 @@ extension Double: FloatDouble {
         }
     }
     
+    @inlinable
     static func fillOpen(start: UnsafeMutablePointer<Double>,
                          count: Int,
                          high: Double,

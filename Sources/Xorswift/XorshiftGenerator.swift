@@ -9,6 +9,7 @@ public struct XorshiftGenerator: RandomNumberGenerator {
     
     /// Create `XorshiftGenerator`.
     /// - precondition: At least one of seeds must be non-zero.
+    @inlinable
     public init(x: UInt32, y: UInt32, z: UInt32, w: UInt32) {
         precondition(x != 0 || y != 0 || z != 0 || w != 0, "Needs non-zero seeds.")
         self.x = x
@@ -18,6 +19,7 @@ public struct XorshiftGenerator: RandomNumberGenerator {
     }
     
     /// Create `XorshiftGenerator` seeded with `generator`.
+    @inlinable
     public init<G: RandomNumberGenerator>(using generator: inout G) {
         var x, y, z, w: UInt32
         repeat {
@@ -31,6 +33,7 @@ public struct XorshiftGenerator: RandomNumberGenerator {
     }
     
     /// Create `XorshiftGenerator` seeded with `SystemRandomNumberGenerator`.
+    @inlinable
     public init() {
         var g = SystemRandomNumberGenerator()
         self.init(using: &g)

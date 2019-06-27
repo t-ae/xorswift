@@ -7,6 +7,7 @@ extension XorshiftGenerator {
     // MARK: Generic
     #if canImport(Accelerate)
     
+    @inlinable
     mutating func fillNormal_generic<T: FloatDouble>(start: UnsafeMutablePointer<T>,
                                                      count: Int,
                                                      mu: T,
@@ -52,6 +53,7 @@ extension XorshiftGenerator {
     
     #else
     
+    @inlinable
     mutating func fillNormal_generic<T: FloatDouble>(start: UnsafeMutablePointer<T>,
                                                      count: Int,
                                                      mu: T,
@@ -61,6 +63,7 @@ extension XorshiftGenerator {
     
     #endif
     
+    @inlinable
     mutating func fillNormal_generic_no_accelerate<T: FloatDouble>(start: UnsafeMutablePointer<T>,
                                                                    count: Int,
                                                                    mu: T,
@@ -106,6 +109,7 @@ extension XorshiftGenerator {
     /// - Precondition:
     ///   - `count` >= 0
     ///   - `sigma` >= 0
+    @inlinable
     public mutating func generateNormal(count: Int, mu: Float = 0, sigma: Float = 1) -> [Float] {
         var array = [Float](repeating: 0, count: count)
         fillNormal(&array, mu: mu, sigma: sigma)
@@ -117,6 +121,7 @@ extension XorshiftGenerator {
     /// Use Accelerate framework if available.
     /// - Precondition:
     ///   - `sigma` >= 0
+    @inlinable
     public mutating func fillNormal(_ array: inout [Float], mu: Float = 0, sigma: Float = 1) {
         array.withUnsafeMutableBufferPointer {
             fillNormal($0, mu: mu, sigma: sigma)
@@ -128,6 +133,7 @@ extension XorshiftGenerator {
     /// Use Accelerate framework if available.
     /// - Precondition:
     ///   - `sigma` >= 0
+    @inlinable
     public mutating func fillNormal(_ buffer: UnsafeMutableBufferPointer<Float>, mu: Float = 0, sigma: Float = 1) {
         buffer.baseAddress.map {
             fillNormal(start: $0, count: buffer.count, mu: mu, sigma: sigma)
@@ -140,6 +146,7 @@ extension XorshiftGenerator {
     /// - Precondition:
     ///   - `count` >= 0
     ///   - `sigma` >= 0
+    @inlinable
     public mutating func fillNormal(start: UnsafeMutablePointer<Float>,
                                     count: Int,
                                     mu: Float = 0,
@@ -153,6 +160,7 @@ extension XorshiftGenerator {
     /// - Precondition:
     ///   - `count` >= 0
     ///   - `sigma` >= 0
+    @inlinable
     public mutating func fillNormal_no_accelerate(start: UnsafeMutablePointer<Float>,
                                                   count: Int,
                                                   mu: Float = 0,
@@ -168,6 +176,7 @@ extension XorshiftGenerator {
     /// - Precondition:
     ///   - `count` >= 0
     ///   - `sigma` >= 0
+    @inlinable
     public mutating func generateNormal(count: Int, mu: Double = 0, sigma: Double = 1) -> [Double] {
         var array = [Double](repeating: 0, count: count)
         fillNormal(&array, mu: mu, sigma: sigma)
@@ -179,6 +188,7 @@ extension XorshiftGenerator {
     /// Use Accelerate framework if available.
     /// - Precondition:
     ///   - `sigma` >= 0
+    @inlinable
     public mutating func fillNormal(_ array: inout [Double], mu: Double = 0, sigma: Double = 1) {
         array.withUnsafeMutableBufferPointer {
             fillNormal($0, mu: mu, sigma: sigma)
@@ -190,6 +200,7 @@ extension XorshiftGenerator {
     /// Use Accelerate framework if available.
     /// - Precondition:
     ///   - `sigma` >= 0
+    @inlinable
     public mutating func fillNormal(_ buffer: UnsafeMutableBufferPointer<Double>, mu: Double = 0, sigma: Double = 1) {
         buffer.baseAddress.map {
             fillNormal(start: $0, count: buffer.count, mu: mu, sigma: sigma)
@@ -202,6 +213,7 @@ extension XorshiftGenerator {
     /// - Precondition:
     ///   - `count` >= 0
     ///   - `sigma` >= 0
+    @inlinable
     public mutating func fillNormal(start: UnsafeMutablePointer<Double>,
                                     count: Int,
                                     mu: Double = 0,
@@ -215,6 +227,7 @@ extension XorshiftGenerator {
     /// - Precondition:
     ///   - `count` >= 0
     ///   - `sigma` >= 0
+    @inlinable
     public mutating func fillNormal_no_accelerate(start: UnsafeMutablePointer<Double>,
                                                   count: Int,
                                                   mu: Double = 0,

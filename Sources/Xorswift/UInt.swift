@@ -35,7 +35,7 @@ extension XorshiftGenerator {
         
         var p = start
         
-        for _ in 0..<min(4, count) {
+        for _ in 0..<count%4 {
             p.pointee = x ^ (x << 11)
             x = y; y = z; z = w;
             w = (w ^ (w >> 19)) ^ (p.pointee ^ (p.pointee >> 8))
@@ -43,28 +43,25 @@ extension XorshiftGenerator {
             p += 1
         }
         
-        guard count > 4 else {
-            return
-        }
-        
-        var xp = p - 4
-        var wp = p - 1
-        for _ in 0..<count-4 {
-            p.pointee = xp.pointee ^ (xp.pointee << 11)
-            p.pointee = (wp.pointee ^ (wp.pointee >> 19)) ^ (p.pointee ^ (p.pointee >> 8))
+        for _ in 0..<count/4 {
+            let t1 = x ^ (x << 11)
+            let t2 = y ^ (y << 11)
+            let t3 = z ^ (z << 11)
+            let t4 = w ^ (w << 11)
             
+            x = w ^ (w >> 19) ^ (t1 ^ (t1 >> 8))
+            y = x ^ (x >> 19) ^ (t2 ^ (t2 >> 8))
+            z = y ^ (y >> 19) ^ (t3 ^ (t3 >> 8))
+            w = z ^ (z >> 19) ^ (t4 ^ (t4 >> 8))
+            
+            p.pointee = x
             p += 1
-            wp += 1
-            xp += 1
+            p.pointee = y
+            p += 1
+            p.pointee = z
+            p += 1
+            p.pointee = w
+            p += 1
         }
-        
-        // write back
-        x = xp.pointee
-        xp += 1
-        y = xp.pointee
-        xp += 1
-        z = xp.pointee
-        xp += 1
-        w = xp.pointee
     }
 }
