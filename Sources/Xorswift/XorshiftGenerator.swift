@@ -37,6 +37,7 @@ public struct XorshiftGenerator: RandomNumberGenerator {
     }
     
     /// Generate random UInt32 number.
+    @inlinable
     public mutating func next() -> UInt32 {
         let t = x ^ (x << 11)
         x = y; y = z; z = w;
@@ -45,6 +46,7 @@ public struct XorshiftGenerator: RandomNumberGenerator {
     }
     
     /// Generate random UInt64 number.
+    @inlinable
     public mutating func next() -> UInt64 {
         let t1 = x ^ (x << 11)
         let t2 = y ^ (y << 11)

@@ -1,20 +1,22 @@
 import XCTest
+import Xorswift
+
 #if canImport(Accelerate)
 import Accelerate
 #endif
-import Xorswift
 
 class PerformanceTests: XCTestCase {
 }
 
-#if !DEBUG
 extension PerformanceTests {
     #if os(macOS)
     func testPerformance_arc4random_single() {
         measure {
+            var x: UInt32 = 0
             for _ in 0..<10_000_000 {
-                _ = arc4random()
+                x = arc4random()
             }
+            XCTAssert(x >= 0)
         }
     }
     #endif
@@ -22,27 +24,22 @@ extension PerformanceTests {
     func testPerformance_xorshift_single() {
         measure {
             var gen = XorshiftGenerator()
+            var x: UInt32 = 0
             for _ in 0..<10_000_000 {
-                _ = gen.next() as UInt32
+                x = gen.next() as UInt32
             }
+            XCTAssert(x >= 0)
         }
     }
     
     func testPerformance_xorshift_single64() {
         measure {
             var gen = XorshiftGenerator()
+            var x: UInt64 = 0
             for _ in 0..<10_000_000 {
-                _ = gen.next() as UInt64
+                x = gen.next() as UInt64
             }
-        }
-    }
-    
-    func testPerformance_xorshift_plus_single64() {
-        measure {
-            var gen = XorshiftPlusGenerator()
-            for _ in 0..<10_000_000 {
-                _ = gen.next() as UInt64
-            }
+            XCTAssert(x >= 0)
         }
     }
 }
@@ -164,4 +161,3 @@ extension PerformanceTests {
         }
     }
 }
-#endif

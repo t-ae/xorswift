@@ -4,6 +4,7 @@ extension XorshiftGenerator {
     ///   - count: Number of elements to sample
     /// - Precondition:
     ///   - `count` >= 0
+    @inlinable
     public mutating func generate(count: Int) -> [UInt32] {
         var array = [UInt32](repeating: 0, count: count)
         fill(&array)
@@ -11,6 +12,7 @@ extension XorshiftGenerator {
     }
     
     /// Fill array with random UInt32 numbers.
+    @inlinable
     public mutating func fill(_ array: inout Array<UInt32>) {
         array.withUnsafeMutableBufferPointer {
             fill($0)
@@ -18,6 +20,7 @@ extension XorshiftGenerator {
     }
     
     /// Generate random UInt32 numbers.
+    @inlinable
     public mutating func fill(_ buffer: UnsafeMutableBufferPointer<UInt32>) {
         buffer.baseAddress.map { fill(start: $0, count: buffer.count) }
     }
@@ -25,6 +28,7 @@ extension XorshiftGenerator {
     /// Generate random UInt32 numbers.
     /// - Precondition:
     ///   - `count` >= 0
+    @inlinable
     public mutating func fill(start: UnsafeMutablePointer<UInt32>,
                               count: Int) {
         precondition(count >= 0, "Invalid argument: `count` must not be less than 0.")
