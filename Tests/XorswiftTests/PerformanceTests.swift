@@ -9,8 +9,9 @@ class PerformanceTests: XCTestCase {
 }
 
 extension PerformanceTests {
-    #if os(macOS)
+    
     func testPerformance_arc4random_single() {
+        #if os(macOS)
         measure {
             var x: UInt32 = 0
             for _ in 0..<10_000_000 {
@@ -18,8 +19,8 @@ extension PerformanceTests {
             }
             XCTAssert(x >= 0)
         }
+        #endif
     }
-    #endif
     
     func testPerformance_xorshift_single() {
         measure {
@@ -45,17 +46,18 @@ extension PerformanceTests {
 }
 
 extension PerformanceTests {
-    #if os(macOS)
     func testPerformance_arc4random() {
         let count = 1_000_000
         var a = [UInt32](repeating: 0, count: count)
+        
+        #if os(macOS)
         measure {
             for _ in 0..<100 {
                 arc4random_buf(&a, MemoryLayout<UInt32>.size * a.count)
             }
         }
+        #endif
     }
-    #endif
     
     func testPerformance_xorshift() {
         let count = 1_000_000
@@ -70,10 +72,11 @@ extension PerformanceTests {
 }
 
 extension PerformanceTests {
-    #if canImport(Accelerate)
     func testPerformance_arc4random_uniform() {
         let count = 1_000_000
         var a = [Float](repeating: 0, count: count)
+        
+        #if canImport(Accelerate)
         measure {
             for _ in 0..<100 {
                 var buf = UnsafeMutableBufferPointer<UInt32>.allocate(capacity: count)
@@ -84,8 +87,9 @@ extension PerformanceTests {
                 vDSP_vsdiv(a, 1, &divisor, &a, 1, vDSP_Length(count))
             }
         }
+        #endif
     }
-    #endif
+    
     
     func testPerformance_xorshift_uniform_float() {
         let count = 1_000_000
@@ -111,18 +115,19 @@ extension PerformanceTests {
 }
 
 extension PerformanceTests {
-    #if canImport(Accelerate)
     func testPerformance_xorshift_normal_accelerate_float() {
         let count = 300_000
         var a = [Float](repeating: 0, count: count)
+        
+        #if canImport(Accelerate)
         measure {
             var gen = XorshiftGenerator()
             for _ in 0..<100 {
                 gen.fillNormal(start: &a, count: a.count, mu: 0, sigma: 1)
             }
         }
+        #endif
     }
-    #endif
     
     func testPerformance_xorshift_normal_no_accelerate_float() {
         let count = 300_000
@@ -137,18 +142,19 @@ extension PerformanceTests {
 }
 
 extension PerformanceTests {
-    #if canImport(Accelerate)
     func testPerformance_xorshift_normal_accelerate_double() {
         let count = 300_000
         var a = [Double](repeating: 0, count: count)
+        
+        #if canImport(Accelerate)
         measure {
             var gen = XorshiftGenerator()
             for _ in 0..<100 {
                 gen.fillNormal(start: &a, count: a.count, mu: 0, sigma: 1)
             }
         }
+        #endif
     }
-    #endif
     
     func testPerformance_xorshift_normal_no_accelerate_double() {
         let count = 300_000
