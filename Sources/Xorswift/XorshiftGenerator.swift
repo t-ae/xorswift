@@ -59,3 +59,5 @@ public struct XorshiftGenerator: RandomNumberGenerator {
         return UInt64(z) << 32 | UInt64(w)
     }
 }
+
+extension XorshiftGenerator: Codable {}
