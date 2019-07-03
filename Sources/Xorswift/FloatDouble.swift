@@ -130,12 +130,16 @@ extension Float: FloatDouble {
                      w: inout UInt32) {
         precondition(!range.isEmpty, "Can't get random value with an empty range")
         
+        guard count > 0 else {
+            return
+        }
+        
         let multiplier = (range.upperBound - range.lowerBound) * .ulpOfOne/2
         precondition(multiplier.isFinite, "There is no uniform distribution on an infinite range")
         
         var p = start
         let end = start + count
-        for _ in 0..<count {
+        while true {
             let t1 = x ^ (x << 11)
             let t2 = y ^ (y << 11)
             let t3 = z ^ (z << 11)
@@ -190,12 +194,16 @@ extension Float: FloatDouble {
                          w: inout UInt32) {
         assert(high > 0)
         
+        guard count > 0 else {
+            return
+        }
+        
         let multiplier = high * .ulpOfOne/2
         assert(multiplier.isFinite)
         
         var p = start
         let end = start + count
-        for _ in 0..<count {
+        while true {
             let t1 = x ^ (x << 11)
             let t2 = y ^ (y << 11)
             let t3 = z ^ (z << 11)
@@ -312,12 +320,16 @@ extension Double: FloatDouble {
                      w: inout UInt32) {
         precondition(!range.isEmpty, "Can't get random value with an empty range")
         
+        guard count > 0 else {
+            return
+        }
+        
         let multiplier = (range.upperBound - range.lowerBound) * .ulpOfOne/2
         precondition(multiplier.isFinite, "There is no uniform distribution on an infinite range")
         
         var p = start
         let end = start + count
-        for _ in 0..<count {
+        while true {
             let t1 = x ^ (x << 11)
             let t2 = y ^ (y << 11)
             let t3 = z ^ (z << 11)
@@ -356,12 +368,16 @@ extension Double: FloatDouble {
                          w: inout UInt32) {
         assert(high > 0)
         
+        guard count > 0 else {
+            return
+        }
+        
         let multiplier = high * .ulpOfOne/2
         assert(multiplier.isFinite)
         
         var p = start
         let end = start + count
-        for _ in 0..<count {
+        while true {
             let t1 = x ^ (x << 11)
             let t2 = y ^ (y << 11)
             let t3 = z ^ (z << 11)
